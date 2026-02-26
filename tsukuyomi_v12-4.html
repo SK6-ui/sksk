@@ -1,0 +1,3564 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; frame-src https://www.youtube.com https://www.youtube-nocookie.com; img-src * data: blob:; connect-src *;">
+<title>月讀 TSUKUYOMI v11</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700&family=Share+Tech+Mono&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;touch-action:none;}
+#c{display:block;width:100%;height:100%;position:fixed;top:0;left:0;}
+#cover{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 60%,#1a0535 0%,#06010f 70%);transition:opacity 1.4s;}
+#cover.out{opacity:0;pointer-events:none;}
+.cs{position:absolute;border-radius:50%;background:#fff;animation:tw var(--d,3s) var(--dl,0s) ease-in-out infinite;}
+@keyframes tw{0%,100%{opacity:.15}50%{opacity:1}}
+.cc{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:13px;}
+.cbadge{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.4em;color:rgba(255,150,220,.7);border:1px solid rgba(255,100,200,.28);padding:4px 16px;border-radius:20px;}
+.csub{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.4em;color:rgba(180,140,255,.8);}
+.cmain{font-family:'Noto Serif JP',serif;font-weight:700;font-size:clamp(50px,14vw,82px);letter-spacing:.05em;line-height:1.0;background:linear-gradient(155deg,#fff 10%,#dda0ff 40%,#ff88cc 70%,#ffdd88 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:tg 4s ease-in-out infinite;}
+@keyframes tg{0%,100%{filter:drop-shadow(0 0 18px rgba(200,100,255,.5))}50%{filter:drop-shadow(0 0 42px rgba(255,120,200,.85))}}
+.cjp{font-family:'Noto Serif JP',serif;font-size:12px;letter-spacing:.28em;color:rgba(255,255,255,.28);margin-top:-8px;}
+.cmoon{width:74px;height:74px;animation:mf 5s ease-in-out infinite;}
+@keyframes mf{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.cdesc{font-family:'Noto Serif JP',serif;font-size:12px;line-height:2;color:rgba(220,200,255,.52);max-width:260px;}
+.sbtn{padding:16px 48px;border:none;border-radius:4px;background:linear-gradient(135deg,rgba(180,60,255,.32),rgba(255,80,180,.18));border:1px solid rgba(200,100,255,.5);color:#fff;font-family:'Noto Serif JP',serif;font-size:16px;letter-spacing:.25em;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;overflow:hidden;}
+.sbtn:active{transform:scale(.97);}
+.shim{position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);animation:sh 3s ease-in-out infinite 1s;}
+@keyframes sh{0%{left:-60%}100%{left:160%}}
+/* loading */
+#ld{position:fixed;inset:0;z-index:60;background:#06010f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .7s;}
+#ld.out{opacity:0;pointer-events:none;}
+.lr{width:58px;height:58px;border-radius:50%;border:2px solid transparent;border-top-color:#e0b4ff;border-right-color:#ff88cc;animation:spin 1s linear infinite;}
+.lt{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.28em;color:#a78bfa;animation:bk 1.2s ease-in-out infinite;}
+.lbw{width:170px;height:2px;background:rgba(124,58,237,.2);border-radius:1px;}
+.lbar{height:100%;width:0%;border-radius:1px;background:linear-gradient(90deg,#9d4edd,#ff6eb0);transition:width .18s;}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bk{0%,100%{opacity:.4}50%{opacity:1}}
+/* hud */
+#hud{position:fixed;top:0;left:0;right:0;z-index:20;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(6,1,15,.78) 0%,transparent 100%);pointer-events:none;opacity:0;transition:opacity 1s;}
+#hud.on{opacity:1;}
+.hl{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.35em;color:rgba(255,180,255,.8);}
+.hi{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,180,220,.4);text-align:right;line-height:1.7;}
+/* 場景標籤 */
+#sl{position:fixed;bottom:145px;left:50%;transform:translateX(-50%);font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.28em;color:rgba(255,200,255,.9);pointer-events:none;opacity:0;transition:opacity .5s;white-space:nowrap;text-shadow:0 0 12px rgba(255,100,255,.8);z-index:20;}
+#sl.on{opacity:1;}
+/* 對話 */
+#dlg{position:fixed;bottom:152px;left:50%;transform:translateX(-50%);z-index:40;display:none;align-items:flex-end;gap:11px;max-width:320px;width:88%;}
+#dlg.on{display:flex;}
+#dp{width:66px;height:66px;border-radius:50%;border:2px solid rgba(255,150,220,.55);overflow:hidden;flex-shrink:0;}
+#dp canvas{width:100%;height:100%;}
+#db{background:rgba(10,5,28,.9);border:1px solid rgba(255,120,200,.38);border-radius:12px 12px 12px 2px;padding:10px 13px;backdrop-filter:blur(8px);}
+#dn{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.18em;color:rgba(255,160,220,.8);margin-bottom:4px;}
+#dt{font-family:'Noto Serif JP',serif;font-size:12px;line-height:1.8;color:rgba(240,220,255,.9);}
+#dx{position:absolute;top:-13px;right:-13px;width:32px;height:32px;border-radius:50%;background:rgba(180,60,255,.9);border:2px solid rgba(255,150,220,.7);color:#fff;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;z-index:60;}
+/* hint */
+#hint{position:fixed;bottom:145px;left:50%;transform:translateX(-50%);z-index:25;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.18em;color:rgba(255,200,120,.9);background:rgba(10,5,28,.7);border:1px solid rgba(255,180,80,.3);padding:5px 14px;border-radius:20px;display:none;pointer-events:none;}
+/* 跳躍鍵 */
+#jumpBtn{position:fixed;bottom:28px;right:18px;z-index:25;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,80,.35),rgba(200,100,0,.2));border:2px solid rgba(255,200,80,.6);color:#ffe066;font-size:22px;display:none;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;box-shadow:0 0 18px rgba(255,180,0,.3);user-select:none;cursor:pointer;font-family:sans-serif;}
+#jumpBtn:active{background:radial-gradient(circle,rgba(255,220,100,.6),rgba(200,120,0,.4));box-shadow:0 0 30px rgba(255,200,0,.6);}
+/* 搖桿 */
+#jw{position:fixed;bottom:24px;left:16px;z-index:25;width:104px;height:104px;display:none;align-items:center;justify-content:center;pointer-events:all;}
+#jb{width:96px;height:96px;border-radius:50%;background:rgba(10,5,30,.52);border:1.5px solid rgba(255,100,220,.38);position:relative;}
+#jk{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle,rgba(255,160,220,.8),rgba(200,60,180,.5));border:1.5px solid rgba(255,160,220,.65);box-shadow:0 0 12px rgba(255,80,200,.5);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);}
+
+/* ── YouTube 大螢幕 UI ── */
+#ytPanel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:80;
+  background:rgba(8,4,20,.95);border:1px solid rgba(255,120,60,.5);border-radius:12px;
+  padding:20px;width:min(320px,88vw);display:none;flex-direction:column;gap:12px;
+  backdrop-filter:blur(16px);box-shadow:0 0 40px rgba(255,80,0,.2);}
+#ytPanel.on{display:flex;}
+#ytPanelTitle{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.3em;
+  color:rgba(255,180,80,.9);text-align:center;}
+#ytInput{background:rgba(255,255,255,.06);border:1px solid rgba(255,150,60,.4);border-radius:6px;
+  padding:10px 12px;color:#fff;font-family:'Share Tech Mono',monospace;font-size:12px;
+  outline:none;width:100%;}
+#ytInput::placeholder{color:rgba(255,200,100,.35);}
+.ytBtnRow{display:flex;gap:8px;}
+.ytBtn{flex:1;padding:10px;border:none;border-radius:6px;cursor:pointer;
+  font-family:'Noto Serif JP',serif;font-size:13px;letter-spacing:.1em;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+#ytPlayBtn{background:linear-gradient(135deg,rgba(255,80,0,.7),rgba(255,40,0,.5));
+  border:1px solid rgba(255,120,60,.6);color:#fff;}
+#ytCloseBtn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);}
+/* 大螢幕靠近提示 */
+#screenHint{position:fixed;bottom:145px;left:50%;transform:translateX(-50%);z-index:25;
+  font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.18em;
+  color:rgba(255,180,80,.9);background:rgba(10,5,28,.7);border:1px solid rgba(255,150,60,.3);
+  padding:5px 14px;border-radius:20px;display:none;pointer-events:none;}
+
+/* ── 海洋劇場面板 ── */
+#oceanYtPanel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:80;
+  background:rgba(4,8,24,.96);border:1px solid rgba(0,150,255,.55);border-radius:12px;
+  padding:20px;width:min(340px,90vw);display:none;flex-direction:column;gap:12px;
+  backdrop-filter:blur(18px);box-shadow:0 0 50px rgba(0,100,255,.25);}
+#oceanYtPanel.on{display:flex;}
+#oceanYtPanelTitle{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.28em;
+  color:rgba(80,200,255,.95);text-align:center;}
+#oceanYtInput{background:rgba(255,255,255,.06);border:1px solid rgba(0,180,255,.4);border-radius:6px;
+  padding:10px 12px;color:#fff;font-family:'Share Tech Mono',monospace;font-size:12px;
+  outline:none;width:100%;}
+#oceanYtInput::placeholder{color:rgba(80,180,255,.35);}
+#oceanScreenHint{position:fixed;bottom:145px;left:50%;transform:translateX(-50%);z-index:25;
+  font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.18em;
+  color:rgba(80,200,255,.95);background:rgba(4,8,24,.75);border:1px solid rgba(0,150,255,.35);
+  padding:5px 14px;border-radius:20px;display:none;pointer-events:none;}
+
+/* ── 傳送系統 ── */
+#tpBtn{position:fixed;top:14px;right:16px;z-index:30;width:44px;height:44px;border-radius:50%;
+  background:radial-gradient(circle,rgba(180,60,255,.6),rgba(100,20,180,.4));
+  border:1.5px solid rgba(220,120,255,.7);color:#fff;font-size:18px;
+  cursor:pointer;display:none;align-items:center;justify-content:center;
+  box-shadow:0 0 18px rgba(180,60,255,.5);pointer-events:all;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:box-shadow .2s;}
+#tpBtn:active{box-shadow:0 0 32px rgba(220,100,255,.9);}
+#tpPanel{position:fixed;top:64px;right:12px;z-index:30;background:rgba(8,4,22,.94);
+  border:1px solid rgba(180,80,255,.45);border-radius:14px;padding:14px 12px;
+  display:none;flex-direction:column;gap:8px;min-width:180px;
+  backdrop-filter:blur(16px);box-shadow:0 0 40px rgba(140,40,255,.25);pointer-events:all;}
+#tpPanel.on{display:flex;}
+#tpPanelTitle{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.38em;
+  color:rgba(200,140,255,.7);text-align:center;margin-bottom:2px;}
+.tpDest{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;
+  cursor:pointer;border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);transition:background .18s,border-color .18s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.tpDest:hover,.tpDest:active{background:rgba(180,60,255,.22);border-color:rgba(220,120,255,.5);}
+.tpDest.active{background:rgba(180,60,255,.32);border-color:rgba(220,150,255,.8);}
+.tpIcon{font-size:18px;flex-shrink:0;width:22px;text-align:center;}
+.tpInfo{display:flex;flex-direction:column;gap:1px;}
+.tpName{font-family:'Noto Serif JP',serif;font-size:12px;color:rgba(240,220,255,.95);letter-spacing:.08em;}
+.tpSub{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(180,140,255,.55);letter-spacing:.12em;}
+
+/* 傳送閃白遮罩 */
+#tpFlash{position:fixed;inset:0;z-index:45;pointer-events:none;
+  background:rgba(220,180,255,.0);transition:background .18s;}
+#tpFlash.flash{background:rgba(220,180,255,.85);}
+
+/* 場景覆蓋層（水面特效）*/
+#sceneOverlay{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity 1s;}
+
+/* ── 天氣/天空按鈕 ── */
+#wxBtn{position:fixed;top:64px;right:16px;z-index:30;width:44px;height:44px;border-radius:50%;
+  background:radial-gradient(circle,rgba(40,160,255,.65),rgba(0,80,180,.45));
+  border:1.5px solid rgba(100,200,255,.75);color:#fff;font-size:18px;
+  cursor:pointer;display:none;align-items:center;justify-content:center;
+  box-shadow:0 0 18px rgba(60,160,255,.5);pointer-events:all;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:box-shadow .2s;}
+#wxBtn:active{box-shadow:0 0 32px rgba(100,200,255,.9);}
+#wxPanel{position:fixed;top:114px;right:12px;z-index:30;background:rgba(4,8,24,.95);
+  border:1px solid rgba(60,150,255,.45);border-radius:14px;padding:14px 12px;
+  display:none;flex-direction:column;gap:7px;min-width:190px;
+  backdrop-filter:blur(18px);box-shadow:0 0 40px rgba(20,100,255,.28);pointer-events:all;}
+#wxPanel.on{display:flex;}
+#wxPanelTitle{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.38em;
+  color:rgba(120,200,255,.75);text-align:center;margin-bottom:3px;}
+.wxItem{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;
+  cursor:pointer;border:1px solid rgba(255,255,255,.07);
+  background:rgba(255,255,255,.04);transition:background .18s,border-color .18s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.wxItem:hover,.wxItem:active{background:rgba(40,120,255,.22);border-color:rgba(100,180,255,.5);}
+.wxItem.active{background:rgba(40,120,255,.32);border-color:rgba(120,200,255,.8);}
+.wxIcon{font-size:18px;flex-shrink:0;width:22px;text-align:center;}
+.wxName{font-family:'Noto Serif JP',serif;font-size:12px;color:rgba(220,240,255,.95);letter-spacing:.08em;}
+.wxSub{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(120,180,255,.55);letter-spacing:.1em;}
+/* 天氣過渡遮罩 */
+#wxFlash{position:fixed;inset:0;z-index:46;pointer-events:none;
+  background:rgba(40,80,160,.0);transition:background .3s;}
+#wxFlash.flash{background:rgba(40,80,160,.7);}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="cover">
+  <div id="cstars"></div>
+  <div class="cc">
+    <div class="cbadge">VIRTUAL SPACE · 月讀計畫</div>
+    <div class="csub">ツクヨミ / TSUKUYOMI</div>
+    <div class="cmain">超時空<br>輝耀姬</div>
+    <div class="cjp">超時空輝耀姫！</div>
+    <div class="cmoon">
+      <svg width="74" height="74" viewBox="0 0 74 74" fill="none">
+        <circle cx="37" cy="37" r="29" fill="url(#mg)"/>
+        <circle cx="49" cy="30" r="20" fill="rgba(6,1,15,.73)"/>
+        <circle cx="25" cy="27" r="3" fill="rgba(255,255,255,.6)"/>
+        <circle cx="32" cy="19" r="1.7" fill="rgba(224,180,255,.9)"/>
+        <defs><radialGradient id="mg" cx="36%" cy="30%"><stop offset="0%" stop-color="#f5eeff"/><stop offset="50%" stop-color="#c084fc"/><stop offset="100%" stop-color="#4c1d95"/></radialGradient></defs>
+      </svg>
+    </div>
+    <div class="cdesc">霓虹燈火的古都夜空<br>屬於彩葉與輝耀的永恆月夜</div>
+    <button class="sbtn" id="sbtn"><div class="shim"></div>▶　開始遊戲</button>
+  </div>
+</div>
+
+<div id="ld" class="out">
+  <div class="lr"></div>
+  <div class="lt">月讀空間　構築中...</div>
+  <div class="lbw"><div class="lbar" id="lbar"></div></div>
+</div>
+
+<div id="hud"><div class="hl">ツクヨミ</div><div class="hi" id="hi">自由探索中</div></div>
+<div id="sl"></div>
+
+<div id="dlg">
+  <div id="dp"><canvas id="dpc" width="66" height="66"></canvas></div>
+  <div id="db"><div id="dn">彩葉 · AYAHA</div><div id="dt">...</div></div>
+  <div id="dx">✕</div>
+</div>
+
+<!-- YouTube 面板 -->
+<div id="ytPanel">
+  <div id="ytPanelTitle">▶ 大螢幕　貼上 YouTube 連結</div>
+  <input id="ytInput" type="text" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off"/>
+  <div class="ytBtnRow">
+    <button class="ytBtn" id="ytPlayBtn">播放</button>
+    <button class="ytBtn" id="ytCloseBtn">關閉</button>
+  </div>
+</div>
+<div id="screenHint">▲ 點擊操作大螢幕</div>
+
+<!-- 海洋劇場面板 -->
+<div id="oceanYtPanel">
+  <div id="oceanYtPanelTitle">🌊 海洋劇場　大螢幕播放</div>
+  <input id="oceanYtInput" type="text" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off"/>
+  <div class="ytBtnRow">
+    <button class="ytBtn" id="oceanPlayBtn" style="background:linear-gradient(135deg,rgba(0,150,255,.7),rgba(0,80,180,.5));border:1px solid rgba(0,180,255,.6);color:#fff;">播放</button>
+    <button class="ytBtn" id="oceanCloseBtn" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);">關閉</button>
+  </div>
+</div>
+<div id="oceanScreenHint">▲ 點擊操作海洋大螢幕</div>
+
+<div id="hint">▲ 點擊與彩葉對話</div>
+<div id="jw"><div id="jb"><div id="jk"></div></div></div>
+<div id="jumpBtn">↑</div>
+
+<!-- 傳送按鈕 -->
+<div id="tpBtn" title="傳送">⛩</div>
+<div id="tpPanel">
+  <div id="tpPanelTitle">✦ 選擇傳送地點 ✦</div>
+  <div class="tpDest active" data-idx="0">
+    <div class="tpIcon">🏮</div>
+    <div class="tpInfo"><div class="tpName">月讀夜街</div><div class="tpSub">TSUKUYOMI CITY</div></div>
+  </div>
+  <div class="tpDest" data-idx="1">
+    <div class="tpIcon">🌊</div>
+    <div class="tpInfo"><div class="tpName">浮世水庭</div><div class="tpSub">FLOATING GARDEN</div></div>
+  </div>
+  <div class="tpDest" data-idx="2">
+    <div class="tpIcon">⛩</div>
+    <div class="tpInfo"><div class="tpName">月社鳥居</div><div class="tpSub">MOON SHRINE</div></div>
+  </div>
+  <div class="tpDest" data-idx="3">
+    <div class="tpIcon">🏮</div>
+    <div class="tpInfo"><div class="tpName">燈籠迴廊</div><div class="tpSub">LANTERN HALL</div></div>
+  </div>
+  <div class="tpDest" data-idx="4">
+    <div class="tpIcon">🏯</div>
+    <div class="tpInfo"><div class="tpName">緋柱迴廊</div><div class="tpSub">CRIMSON PILLARS</div></div>
+  </div>
+  <div class="tpDest" data-idx="5">
+    <div class="tpIcon">🎬</div>
+    <div class="tpInfo"><div class="tpName">海洋劇場</div><div class="tpSub">OCEAN THEATER</div></div>
+  </div>
+</div>
+<div id="tpFlash"></div>
+<div id="sceneOverlay"></div>
+
+<!-- 天氣/天空按鈕 -->
+<div id="wxBtn" title="天空">🌌</div>
+<div id="wxPanel">
+  <div id="wxPanelTitle">✦ 選擇天空 ✦</div>
+  <div class="wxItem active" data-wx="0">
+    <div class="wxIcon">🌙</div>
+    <div><div class="wxName">月讀夜空</div><div class="wxSub">MOONLIT NIGHT</div></div>
+  </div>
+  <div class="wxItem" data-wx="1">
+    <div class="wxIcon">🌌</div>
+    <div><div class="wxName">銀河星雲</div><div class="wxSub">GALAXY NEBULA</div></div>
+  </div>
+  <div class="wxItem" data-wx="2">
+    <div class="wxIcon">🐟</div>
+    <div><div class="wxName">彩虹魚飛天</div><div class="wxSub">RAINBOW FISH SKY</div></div>
+  </div>
+  <div class="wxItem" data-wx="3">
+    <div class="wxIcon">🌈</div>
+    <div><div class="wxName">極光之夜</div><div class="wxSub">AURORA BOREALIS</div></div>
+  </div>
+  <div class="wxItem" data-wx="4">
+    <div class="wxIcon">🌊</div>
+    <div><div class="wxName">海底世界</div><div class="wxSub">DEEP OCEAN</div></div>
+  </div>
+  <div class="wxItem" data-wx="5">
+    <div class="wxIcon">🌸</div>
+    <div><div class="wxName">粉夢雲海</div><div class="wxSub">SAKURA CLOUDSCAPE</div></div>
+  </div>
+  <div class="wxItem" data-wx="6">
+    <div class="wxIcon">⛈</div>
+    <div><div class="wxName">血月暴風雨</div><div class="wxSub">BLOOD MOON STORM</div></div>
+  </div>
+</div>
+<div id="wxFlash"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" onerror="document.getElementById('ld').style.display='flex';document.getElementById('ld').style.opacity='1';document.getElementById('ld').classList.remove('out');document.getElementById('ld').innerHTML='<div style=\'color:#ff88cc;font-family:monospace;font-size:12px;padding:24px;text-align:center;line-height:2\'>❌ Three.js 載入失敗<br><br>請確認網路連線後<br>重新開啟頁面</div>';"></script>
+<script>
+// ── 封面星點 ──────────────────────────────────────
+(()=>{
+  const w=document.getElementById('cstars');
+  for(let i=0;i<90;i++){
+    const s=document.createElement('div'); s.className='cs';
+    const z=Math.random()*2.4+.4;
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${z}px;height:${z}px;--d:${2+Math.random()*4}s;--dl:${Math.random()*5}s;opacity:${Math.random()*.6+.1};`;
+    w.appendChild(s);
+  }
+})();
+
+// ── 頭像 Canvas ───────────────────────────────────
+(()=>{
+  const c=document.getElementById('dpc'),x=c.getContext('2d'),S=66;
+  const bg=x.createRadialGradient(33,33,0,33,33,33);
+  bg.addColorStop(0,'#1a0828'); bg.addColorStop(1,'#06010f');
+  x.fillStyle=bg; x.fillRect(0,0,S,S);
+  x.fillStyle='#1a1a2e'; x.beginPath(); x.ellipse(33,58,17,11,0,0,Math.PI); x.fill();
+  x.fillStyle='#f5c896'; x.beginPath(); x.ellipse(33,35,13,15,0,0,Math.PI*2); x.fill();
+  x.fillStyle='#251030';
+  x.beginPath(); x.ellipse(33,25,15,12,0,0,Math.PI*2); x.fill();
+  x.beginPath(); x.ellipse(21,35,7,11,-0.25,0,Math.PI*2); x.fill();
+  x.beginPath(); x.ellipse(45,35,7,11,0.25,0,Math.PI*2); x.fill();
+  [[18,19,12,8,26,21],[48,19,54,8,46,21]].forEach(([bx,by,tx,ty,ex,ey])=>{
+    x.fillStyle='#251030'; x.beginPath(); x.moveTo(bx,by); x.lineTo(tx,ty); x.lineTo(ex,ey); x.closePath(); x.fill();
+    x.fillStyle='#c4896a'; x.beginPath(); x.moveTo(bx+1,by+1); x.lineTo(tx,ty+1); x.lineTo(ex-1,ey); x.closePath(); x.fill();
+  });
+  [[26,35],[40,35]].forEach(([ex,ey])=>{
+    x.fillStyle='#1a2e1a'; x.beginPath(); x.ellipse(ex,ey,4.5,5.5,0,0,Math.PI*2); x.fill();
+    x.fillStyle='#3a8a3a'; x.beginPath(); x.ellipse(ex,ey,3,4,0,0,Math.PI*2); x.fill();
+    x.fillStyle='#0a1a0a'; x.beginPath(); x.ellipse(ex,ey,1.8,2.7,0,0,Math.PI*2); x.fill();
+    x.fillStyle='rgba(255,255,255,.9)'; x.beginPath(); x.arc(ex+1,ey-1,1.1,0,Math.PI*2); x.fill();
+  });
+  x.fillStyle='#cc2244'; x.beginPath(); x.moveTo(33,24); x.lineTo(35.5,27); x.lineTo(33,30); x.lineTo(30.5,27); x.closePath(); x.fill();
+  x.strokeStyle='#c07060'; x.lineWidth=1.2;
+  x.beginPath(); x.moveTo(29,44); x.quadraticCurveTo(33,47,37,44); x.stroke();
+  x.globalCompositeOperation='destination-in';
+  x.beginPath(); x.arc(33,33,33,0,Math.PI*2); x.fill();
+})();
+
+// ── 對話 ─────────────────────────────────────────
+const LINES=[
+  '歡迎來到月讀！\n這裡是永不落幕的夜晚 ✦',
+  '你看那邊！煙火又開始了 ✨',
+  '月讀的霓虹比任何城市都亮\n我很喜歡這裡 ♪',
+  '左邊搖桿移動，右邊滑動轉視角',
+  '輝耀說這座城市永遠不會天亮\n也許這樣也不錯 ♡',
+];
+let dIdx=0, dOpen=false;
+function openDlg(){ document.getElementById('dt').textContent=LINES[dIdx++%LINES.length]; document.getElementById('dlg').classList.add('on'); dOpen=true; }
+function closeDlg(e){ if(e){e.stopPropagation();e.preventDefault();} document.getElementById('dlg').classList.remove('on'); dOpen=false; }
+const dxBtn=document.getElementById('dx');
+dxBtn.addEventListener('click',closeDlg);
+dxBtn.addEventListener('touchend',closeDlg,{passive:false});
+dxBtn.addEventListener('touchstart',e=>e.stopPropagation(),{passive:false});
+
+// ── 開始 ─────────────────────────────────────────
+document.getElementById('sbtn').addEventListener('click',()=>{
+  document.getElementById('cover').classList.add('out');
+  const ld=document.getElementById('ld'); ld.classList.remove('out'); ld.style.opacity='1';
+  let p=0; const bar=document.getElementById('lbar');
+  const iv=setInterval(()=>{
+    p+=Math.random()*20+9; bar.style.width=Math.min(p,95)+'%';
+    if(p>=95){ clearInterval(iv); bar.style.width='100%';
+      setTimeout(()=>{
+      const ldEl=document.getElementById('ld');
+      ldEl.style.transition='opacity 0.5s';
+      ldEl.style.opacity='0';
+      setTimeout(()=>{ ldEl.style.display='none'; initGame(); }, 500);
+    },300); }
+  },120);
+});
+
+// ════════════════════════════════════════════════════════
+//  GAME  —  目標：< 25 drawcalls
+//  策略：InstancedMesh + BufferGeometryUtils.mergeBufferGeometries
+// ════════════════════════════════════════════════════════
+function initGame(){
+  // loading 已 display:none，這個 dbg 只在 catch 時顯示
+  function dbg(msg){
+    console.log('[INIT]', msg);
+  }
+  try {
+  document.getElementById('hud').classList.add('on');
+  document.getElementById('jw').style.display='flex';
+  document.getElementById('tpBtn').style.display='flex';
+  document.getElementById('wxBtn').style.display='flex';
+  const jumpBtnEl=document.getElementById('jumpBtn');
+  jumpBtnEl.style.display='flex';
+  jumpBtnEl.addEventListener('touchstart',e=>{
+    e.stopPropagation(); e.preventDefault();
+    if(onGround){ velY=JUMP_V; onGround=false; }
+  },{passive:false});
+  jumpBtnEl.addEventListener('click',()=>{ if(onGround){ velY=JUMP_V; onGround=false; } });
+  setTimeout(openDlg, 1000);
+
+  const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'), antialias:window.devicePixelRatio<2, powerPreference:'high-performance'});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2.0));
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.shadowMap.enabled=false;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.4;
+  renderer.outputEncoding=THREE.sRGBEncoding;
+
+  const scene=new THREE.Scene();
+  dbg("1/8 scene init...");
+  scene.fog=new THREE.FogExp2(0x0d0510, 0.015);
+
+  const camera=new THREE.PerspectiveCamera(65,window.innerWidth/window.innerHeight,.1,220);
+  camera.position.set(0,2.2,6);
+  let T=0, lastNow=performance.now();
+
+
+  // ── 天空（7種天氣 GLSL Shader）──────────────────────
+  dbg("2/8 sky...");
+  const skyMat=new THREE.ShaderMaterial({side:THREE.BackSide,
+    uniforms:{uT:{value:0},uMode:{value:0}},
+    vertexShader:`varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader:`
+      varying vec3 vP; uniform float uT,uMode;
+      float h2(vec2 p){p=fract(p*vec2(127.1,311.7));p+=dot(p,p+19.19);return fract(p.x*p.y);}
+      float n2(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);
+        return mix(mix(h2(i),h2(i+vec2(1,0)),u.x),mix(h2(i+vec2(0,1)),h2(i+vec2(1,1)),u.x),u.y);}
+      float fbm(vec2 p){return n2(p)*.5+n2(p*2.13)*.25+n2(p*4.41)*.125+n2(p*9.17)*.0625;}
+      vec3 hue2rgb(float h){h=fract(h)*6.;return clamp(abs(vec3(h-3.,h-2.,4.-h))-1.,0.,1.);}
+
+      vec3 sky_moonlit(vec3 d,float t){
+        float nt=n2(d.xz*2.2+t*.018)*.5+n2(d.xz*4.5-t*.012)*.3+n2(d.xy*3.1+t*.007)*.2;
+        vec3 sky=mix(vec3(.014,.006,.032),vec3(.055,.014,.14),smoothstep(.1,.7,nt));
+        sky=mix(sky,vec3(.025,.008,.065),smoothstep(.5,1.,d.y));
+        float hz=pow(clamp(1.-abs(d.y)*.9,0.,1.),3.5);
+        float hzWarm=pow(clamp(1.-abs(d.y+.04)*.7,0.,1.),5.);
+        sky+=vec3(.55,.18,.04)*hz*.85; sky+=vec3(.80,.28,.06)*hzWarm*.6;
+        sky+=vec3(.35,.08,.02)*smoothstep(0.,.06,-d.y)*1.4;
+        float shimmer=sin(d.x*8.+t*2.)*.5+.5;
+        sky+=vec3(.18,.03,.04)*smoothstep(-.1,.05,-d.y)*shimmer*.5;
+        float skyDark=smoothstep(.2,.8,d.y);
+        float st=step(.9975,h2(floor(d.xz*400.+d.y*200.)));
+        float stBig=step(.9996,h2(floor(d.xz*180.)));
+        float twink=.7+.3*sin(uT*(2.+h2(floor(d.xz*400.))*3.)+h2(floor(d.xz*400.))*6.28);
+        sky+=st*vec3(1.,.97,1.)*twink*skyDark*.8; sky+=stBig*vec3(1.4,1.3,.9)*skyDark*1.5;
+        vec3 moonDir=normalize(vec3(-.4,.7,-.5));
+        float moonD=distance(normalize(d),moonDir);
+        sky+=vec3(.92,.88,.78)*smoothstep(.06,.0,moonD)*3.;
+        sky+=vec3(.55,.5,.4)*smoothstep(.12,.04,moonD)*.8;
+        sky+=vec3(.22,.18,.12)*smoothstep(.28,.12,moonD)*.3;
+        return sky;
+      }
+
+      vec3 sky_galaxy(vec3 d,float t){
+        float a=atan(d.x,d.z),e=d.y;
+        float gBand=exp(-(e-.12)*(e-.12)*8.)*(.4+fbm(vec2(a*3.+t*.004,e*4.))*.6);
+        vec3 col=mix(vec3(.005,.003,.015),vec3(.03,.01,.08),gBand*2.);
+        col+=vec3(.28,.04,.06)*fbm(vec2(a*2.5+t*.003,e*3.5+.8))*.8*gBand*1.5;
+        col+=vec3(.04,.12,.35)*fbm(vec2(a*1.8-.6-t*.002,e*2.8+1.4))*(.3+gBand*.7)*1.2;
+        float cD=length(vec2(a*.5,e-.08)); col+=vec3(.15,.06,.4)*exp(-cD*cD*6.)*1.8;
+        float st=step(.991,h2(floor(d.xz*500.+d.y*250.)));
+        float stB=step(.9993,h2(floor(d.xz*200.)));
+        float twk=.6+.4*sin(uT*3.+h2(floor(d.xz*500.))*9.);
+        col+=st*vec3(1.,1.,1.)*twk*(.8+gBand*.5); col+=stB*vec3(1.5,1.3,1.)*2.5;
+        col=mix(col,vec3(.005,.002,.01),smoothstep(-.04,.08,-d.y)*.95);
+        return col;
+      }
+
+      vec3 sky_fish(vec3 d,float t){
+        vec3 col=mix(vec3(.04,.01,.14),vec3(.01,.04,.18),d.y*.5+.5);
+        col=mix(col,vec3(.18,.04,.28),smoothstep(.3,.9,d.y));
+        for(int ri=0;ri<4;ri++){
+          float roff=float(ri)*.18;
+          float rbY=sin(d.x*3.+float(ri)*1.57+t*.4+d.z*2.)*.15+.35+roff;
+          float rbMask=exp(-(d.y-rbY)*(d.y-rbY)*80.)*smoothstep(-.2,.4,d.y);
+          float rbHue=fract(atan(d.x,d.z)*.16+float(ri)*.25+t*.05);
+          col+=hue2rgb(rbHue)*.35*rbMask;
+        }
+        vec2 fp=vec2(d.x*5.+t*.8,d.z*4.+t*.6);
+        float fish=step(.9978,h2(floor(fp)));
+        col+=fish*hue2rgb(fract(h2(floor(fp))*3.7+t*.02))*3.5*smoothstep(-.1,.3,d.y);
+        col+=step(.9994,h2(floor(d.xz*280.+d.y*140.+t*.1)))*vec3(.8,.9,1.)*2.;
+        col+=step(.9982,h2(floor(d.xz*360.+d.y*180.)))*vec3(1.,.95,1.)*.8;
+        col+=vec3(.5,.15,.55)*pow(clamp(1.-abs(d.y)*.8,0.,1.),4.)*.7;
+        return col;
+      }
+
+      vec3 sky_aurora(vec3 d,float t){
+        vec3 col=mix(vec3(.003,.006,.012),vec3(.006,.01,.025),d.y*.5+.5);
+        float band=smoothstep(.05,.6,d.y)*smoothstep(.95,.5,d.y+.1);
+        float g1=fbm(vec2(d.x*4.+t*.14,t*.06))*fbm(vec2(d.z*3.5+t*.1,d.y*5.));
+        col+=vec3(.05,.9,.35)*g1*band*2.8;
+        col+=vec3(.02,.6,.7)*fbm(vec2(d.x*3.2-t*.11,d.z*2.8+t*.08))*fbm(vec2(d.y*6.+t*.05,d.x*2.))*band*1.8;
+        col+=vec3(.55,.08,.75)*fbm(vec2(d.x*2.5+t*.09,d.z*2.+t*.12))*smoothstep(.45,.75,d.y)*1.4;
+        float botBand=smoothstep(.04,.15,d.y)*smoothstep(.2,.08,d.y);
+        col+=vec3(.9,.4,.05)*fbm(vec2(d.x*5.+t*.2,d.z*4.-t*.15))*botBand*1.2;
+        col+=step(.9972,h2(floor(d.xz*420.+d.y*210.)))*vec3(1.,.98,1.)*1.2*(1.-g1*.6);
+        col=mix(col,vec3(.005,.012,.02),smoothstep(-.03,.12,-d.y)*.92);
+        return col;
+      }
+
+      vec3 sky_ocean(vec3 d,float t){
+        float depth=clamp(1.-d.y*1.5,0.,1.);
+        vec3 col=mix(vec3(.02,.12,.28),mix(vec3(.004,.018,.06),vec3(.002,.008,.025),smoothstep(.6,1.,depth)),depth);
+        float causticMask=smoothstep(.2,.8,d.y);
+        col+=vec3(.08,.45,.65)*fbm(vec2(d.x*8.+t*.35,d.z*7.+t*.28))*fbm(vec2(d.x*5.2-t*.22,d.z*6.+t*.18))*causticMask*2.5;
+        col+=vec3(.05,.25,.4)*fbm(vec2(d.x*12.-t*.4,d.z*10.+t*.3))*causticMask*1.5;
+        float jelly=step(.9990,h2(floor(d.xz*180.+d.y*90.)));
+        col+=jelly*mix(vec3(.4,.8,.9),vec3(.9,.3,.8),h2(floor(d.xz*180.)))*2.5*smoothstep(0.,.3,d.y);
+        col+=step(.9965,h2(floor(d.xz*350.+d.y*175.+floor(t*.5)*100.)))*vec3(.3,.8,.5)*.8;
+        col+=step(.9985,h2(floor(vec2(d.x*6.+t*.3,d.z*5.-t*.25)+d.y*80.)))*vec3(.8,.4,1.)*3.;
+        col+=step(.9992,h2(floor(d.xz*250.+floor(uT*1.5)*200.+d.y*125.)))*vec3(.7,.9,1.)*.8;
+        col+=vec3(.04,.18,.3)*smoothstep(.5,1.,d.y)*.8;
+        return col;
+      }
+
+      vec3 sky_sakura(vec3 d,float t){
+        vec3 col=mix(vec3(.2,.06,.2),mix(vec3(.38,.14,.32),vec3(.55,.25,.52),smoothstep(.4,.9,d.y)),d.y*.5+.5);
+        float cloudH=smoothstep(.05,.5,d.y)*smoothstep(.9,.4,d.y);
+        float c1=smoothstep(.35,.75,fbm(vec2(d.x*2.+t*.018,d.z*1.8+t*.012)));
+        float c2=smoothstep(.4,.8,fbm(vec2(d.x*1.5-.5-t*.015,d.z*2.2+.8+t*.01)));
+        col=mix(col,vec3(.92,.72,.85),c1*cloudH*.85);
+        col=mix(col,vec3(1.,.85,.9),c2*cloudH*c1*.7);
+        col=mix(col,vec3(1.,.95,.96),c1*c2*cloudH*.5);
+        col+=step(.9975,h2(floor(vec2(d.x*5.+t*.25,d.z*4.-t*.18)+d.y*100.)))*vec3(1.,.8,.85)*1.8;
+        col+=step(.9996,h2(floor(d.xz*160.)))*vec3(1.,.85,.9)*3.;
+        col+=step(.9978,h2(floor(d.xz*380.+d.y*190.)))*vec3(1.,.82,.88)*(.8+n2(d.xz*80.+t)*.4);
+        col+=vec3(.7,.25,.4)*pow(clamp(1.-abs(d.y)*.7,0.,1.),3.)*.6;
+        col+=vec3(.9,.4,.55)*pow(clamp(1.-abs(d.y+.02)*.6,0.,1.),7.)*.8;
+        return col;
+      }
+
+      vec3 sky_storm(vec3 d,float t){
+        float c=smoothstep(.3,.85,fbm(vec2(d.x*2.8+t*.04,d.z*2.2+t*.032))*.6+fbm(vec2(d.x*1.8-t*.028,d.z*3.4-t*.025))*.4);
+        vec3 col=mix(vec3(.03,.003,.003),mix(vec3(.1,.01,.01),vec3(.18,.02,.02),smoothstep(.5,.9,c)),c);
+        col=mix(col,vec3(.04,.005,.005),d.y*.5+.5);
+        vec3 moonDir=normalize(vec3(.2,.6,-.4));
+        float moonD=distance(normalize(d),moonDir);
+        col+=vec3(.85,.12,.06)*smoothstep(.09,.0,moonD)*2.5*(1.-c*.5);
+        col+=vec3(.45,.06,.03)*smoothstep(.18,.06,moonD)*.8;
+        float lightningT=floor(uT*2.5+h2(floor(d.xz*80.))*10.);
+        col+=step(.97,h2(floor(d.xz*120.+lightningT*88.)))*vec3(1.,.75,.5)*4.*smoothstep(.1,.5,d.y);
+        col+=vec3(.7,.05,.02)*pow(clamp(1.-abs(d.y+.04)*.55,0.,1.),5.)*.9;
+        col+=vec3(.5,.03,.01)*smoothstep(0.,.06,-d.y)*1.5;
+        col+=step(.9988,h2(floor(d.xz*380.)))*vec3(.7,.1,.05)*.5*(1.-c*.8);
+        return col;
+      }
+
+      void main(){
+        vec3 d=normalize(vP); int m=int(uMode+.5); vec3 col;
+        if(m==1) col=sky_galaxy(d,uT); else if(m==2) col=sky_fish(d,uT);
+        else if(m==3) col=sky_aurora(d,uT); else if(m==4) col=sky_ocean(d,uT);
+        else if(m==5) col=sky_sakura(d,uT); else if(m==6) col=sky_storm(d,uT);
+        else col=sky_moonlit(d,uT);
+        col=pow(max(col,vec3(0.)),vec3(.88));
+        gl_FragColor=vec4(col,1.);
+      }`});
+  skyMat.side=THREE.BackSide;
+  skyMat.depthWrite=false;
+  const skySphere=new THREE.Mesh(new THREE.SphereGeometry(200,32,16),skyMat);
+  skySphere.renderOrder=-1;
+  scene.add(skySphere);
+
+  // ── 地面（高精度石板程序紋理）────────────────────
+  dbg("3/8 ground...");
+  const gndTex=(()=>{
+    const cv=document.createElement('canvas'); cv.width=512; cv.height=512;
+    const ctx=cv.getContext('2d');
+    ctx.fillStyle='#140a0d'; ctx.fillRect(0,0,512,512);
+    for(let row=0;row<8;row++){
+      for(let col=0;col<6;col++){
+        const x=col*86+row%2*43,y=row*64,v=10+Math.random()*14;
+        ctx.fillStyle=`rgb(${v+8},${v/2+4},${v/1.5+6})`; ctx.fillRect(x+1,y+1,84,62);
+        ctx.fillStyle='rgba(0,0,0,0.65)'; ctx.fillRect(x,y,86,1); ctx.fillRect(x,y,1,64);
+      }
+    }
+    const ref1=ctx.createRadialGradient(256,256,0,256,256,300);
+    ref1.addColorStop(0,'rgba(255,120,40,0.18)'); ref1.addColorStop(.5,'rgba(255,80,20,0.07)'); ref1.addColorStop(1,'rgba(255,50,10,0)');
+    ctx.fillStyle=ref1; ctx.fillRect(0,0,512,512);
+    for(let i=0;i<120;i++){
+      const x=Math.random()*512,y=Math.random()*512,r=1+Math.random()*3;
+      ctx.fillStyle=`rgba(255,${150+Math.random()*100},${50+Math.random()*80},${Math.random()*.18})`;
+      ctx.beginPath(); ctx.ellipse(x,y,r,r*.3,0,0,Math.PI*2); ctx.fill();
+    }
+    for(let i=0;i<4000;i++){
+      ctx.fillStyle=`rgba(0,0,0,${Math.random()*.07})`; ctx.fillRect(Math.random()*512,Math.random()*512,Math.random()*3+1,1);
+    }
+    const t=new THREE.CanvasTexture(cv); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(6,6); return t;
+  })();
+  const gnd=new THREE.Mesh(new THREE.PlaneGeometry(1200,1200),
+    new THREE.MeshStandardMaterial({map:gndTex,color:0x180c12,roughness:.18,metalness:.82}));
+  gnd.rotation.x=-Math.PI/2; scene.add(gnd);
+
+  // ── 燈光（照片精確：暖橘＋深藍冷色對比）─────────
+  const ambLight=new THREE.AmbientLight(0x10060c,0.85); scene.add(ambLight);
+  const moon=new THREE.DirectionalLight(0xffe8b0,0.72); moon.position.set(-30,80,-50); scene.add(moon);
+  const groundBounce=new THREE.HemisphereLight(0x080310,0xff5522,0.38); scene.add(groundBounce);
+  const mainWarm=new THREE.PointLight(0xff6800,2.1,190); mainWarm.position.set(0,8,0); scene.add(mainWarm);
+  const coolFill=new THREE.PointLight(0x1a3888,1.05,160); coolFill.position.set(0,22,-42); scene.add(coolFill);
+  const shrineRed=new THREE.PointLight(0xff3311,1.5,100); shrineRed.position.set(18,5,-35); scene.add(shrineRed);
+  const leftCool=new THREE.PointLight(0x2255cc,0.85,90); leftCool.position.set(-20,8,-10); scene.add(leftCool);
+
+  // ════════════════════════════════════════════════
+  //  核心優化：InstancedMesh
+  //  所有同類物件 → 一個 drawcall
+  // ════════════════════════════════════════════════
+  const M4=new THREE.Matrix4();
+  const dummy=new THREE.Object3D();
+  const sceneGroups=[];
+
+  // ── 場景0: 分組（傳送時可隱藏）──────────────────
+  const g0=new THREE.Group(); scene.add(g0); sceneGroups[0]=g0;
+
+  // ── 建築主體 (InstancedMesh) — 1 drawcall ────────
+  dbg("4/8 buildings...");
+  const BDATA=[
+    // [x, z, w, h_total, d, wall_color_hue]
+    // 左街
+    [-8,6, 5,8.7,4],[-8,-4, 6,11.6,5],[-8,-14,5,8.7,4],[-8,-24,7,14.5,5],
+    [-8,-34,5,11.6,4],[-8,-44,6,8.7,5],[-8,16, 4,5.8,3],[-8,-54,5,8.7,4],
+    // 右街
+    [8,6, 6,11.6,5],[8,-4, 5,8.7,4],[8,-14,7,14.5,5],[8,-24,5,11.6,4],
+    [8,-34,6,8.7,5],[8,-44,5,11.6,4],[8,16, 4,5.8,3],[8,-54,6,8.7,5],
+    // 中景 左
+    [-18,-8,8,17.4,6],[-18,-22,7,14.5,5],[-18,-36,8,17.4,6],[-18,-50,6,11.6,4],
+    // 中景 右
+    [18,-8,8,17.4,6],[18,-22,7,14.5,5],[18,-36,8,17.4,6],[18,-50,6,11.6,4],
+    // 遠景
+    [-32,-18,10,23.2,8],[-32,-38,9,20.3,7],[32,-18,10,23.2,8],[32,-38,9,20.3,7],
+    [-46,-28,12,29.0,9],[46,-28,12,29.0,9],[0,-60,14,34.8,10],
+    // 超遠景（小、暗）
+    [-22,-55,6,14.5,5],[22,-55,6,14.5,5],[-40,-55,8,17.4,6],[40,-55,8,17.4,6],
+    [-12,-55,5,11.6,4],[12,-55,5,11.6,4],
+  ];
+  const bCount=BDATA.length;
+  const bGeo=new THREE.BoxGeometry(1,1,1);
+  const bMat=new THREE.MeshStandardMaterial({color:0x2a1408,roughness:.72,metalness:.04});
+  const bInst=new THREE.InstancedMesh(bGeo,bMat,bCount);
+  BDATA.forEach(([x,z,w,h,d],i)=>{
+    dummy.position.set(x,h/2,z); dummy.scale.set(w,h,d); dummy.updateMatrix();
+    bInst.setMatrixAt(i,dummy.matrix);
+  });
+  // 每棟建築設不同暖色調
+  const bCol=new THREE.Color();
+  const bWallPalette=[0x2a1408,0x2e180a,0x220e06,0x1e1008,0x28120a,0x241606,0x1a1010,0x2c1a0a];
+  BDATA.forEach((_,i)=>{
+    bCol.set(bWallPalette[i%bWallPalette.length]); bInst.setColorAt(i,bCol);
+  });
+  bInst.instanceColor.needsUpdate=true;
+  bInst.instanceMatrix.needsUpdate=true;
+  g0.add(bInst); // drawcall: 1
+
+  // ── 屋頂（Instanced）— 1 drawcall ─────────────────
+  // ★ v10: 改用更真實的日式出簷屋頂（兩層簷）
+  const roofGeo=(()=>{
+    const g=new THREE.BufferGeometry();
+    // 頂層屋脊（四斜面切妻）
+    const v=new Float32Array([
+      // 正面三角
+      -.5,0,-.5, .5,0,-.5, 0,.32,0,
+       .5,0,-.5, .5,0, .5, 0,.32,0,
+       .5,0, .5,-.5,0, .5, 0,.32,0,
+      -.5,0, .5,-.5,0,-.5, 0,.32,0,
+    ]);
+    g.setAttribute('position',new THREE.BufferAttribute(v,3));
+    g.computeVertexNormals(); return g;
+  })();
+  const roofMat=new THREE.MeshStandardMaterial({color:0x2a0602,roughness:.78,emissive:0x0a0100,emissiveIntensity:.15});
+  const roofInst=new THREE.InstancedMesh(roofGeo, roofMat, bCount);
+  BDATA.forEach(([x,z,w,h,d],i)=>{
+    dummy.position.set(x,h,z); dummy.scale.set(w+1.4,1.5,d+1.4); dummy.updateMatrix();
+    roofInst.setMatrixAt(i,dummy.matrix);
+  });
+  roofInst.instanceMatrix.needsUpdate=true;
+  g0.add(roofInst); // drawcall: 1
+
+  // ── 出簷（屋簷延伸板，Instanced）─────────────────
+  // 日式建築特有的寬出簷，讓建築更有體積感
+  const eaveInst=new THREE.InstancedMesh(
+    new THREE.BoxGeometry(1,.12,1),
+    new THREE.MeshStandardMaterial({color:0x1e0402,roughness:.8,emissive:0x060000,emissiveIntensity:.1}),
+    bCount);
+  BDATA.forEach(([x,z,w,h,d],i)=>{
+    dummy.position.set(x,h-.35,z); dummy.scale.set(w+2.0,.12,d+2.0); dummy.updateMatrix();
+    eaveInst.setMatrixAt(i,dummy.matrix);
+  });
+  eaveInst.instanceMatrix.needsUpdate=true;
+  g0.add(eaveInst); // 屋簷板 drawcall: 1
+
+  // 二層出簷（中腹部）
+  const eave2Inst=new THREE.InstancedMesh(
+    new THREE.BoxGeometry(1,.1,1),
+    new THREE.MeshStandardMaterial({color:0x1e0402,roughness:.8}),
+    bCount);
+  BDATA.forEach(([x,z,w,h,d],i)=>{
+    if(h>8){ // 只有較高建築才有中層出簷
+      dummy.position.set(x,h*.55,z); dummy.scale.set(w+1.2,.1,d+1.2); dummy.updateMatrix();
+    } else {
+      dummy.scale.set(0,0,0); dummy.updateMatrix(); // 隱藏低矮建築的中層簷
+    }
+    eave2Inst.setMatrixAt(i,dummy.matrix);
+  });
+  eave2Inst.instanceMatrix.needsUpdate=true;
+  g0.add(eave2Inst);
+
+  // ── 窗戶（Instanced，合批）— 1 drawcall ───────────
+  // 每棟建築正面3層各2窗 = 6窗/棟，共約200窗
+  const winPositions=[];
+  BDATA.forEach(([x,z,w,h,d])=>{
+    const floors=Math.round(h/2.9);
+    const wc=Math.max(2,Math.floor(w/1.8));
+    for(let f=0;f<Math.min(floors,4);f++){
+      for(let i=0;i<wc;i++){
+        winPositions.push([
+          x - w/2+.9+i*(w-1.4)/Math.max(wc-1,1),
+          f*2.9+1.4,
+          z + d/2+.01,
+          .72, .88
+        ]);
+      }
+    }
+  });
+  const winInst=new THREE.InstancedMesh(
+    new THREE.PlaneGeometry(1,1),
+    new THREE.MeshStandardMaterial({color:0xfffce0,emissive:0xffeeaa,emissiveIntensity:3.0,transparent:true,opacity:.92}),
+    winPositions.length);
+  winPositions.forEach(([x,y,z,sw,sh],i)=>{
+    dummy.position.set(x,y,z); dummy.rotation.set(0,0,0); dummy.scale.set(sw,sh,1); dummy.updateMatrix();
+    winInst.setMatrixAt(i,dummy.matrix);
+  });
+  winInst.instanceMatrix.needsUpdate=true;
+  g0.add(winInst); // drawcall: 1
+
+  // ── 霓虹招牌（Instanced）— 1 drawcall ─────────────
+  const signColors=[
+    0xff6644,0xff9933,0xffcc44,0xff4466,0xff88aa,0xff5500,0xffaa44,0xff3366,
+    0xffdd66,0xff6699,0xffbb33,0xff4488,0xffaa66,0xff7744,0xffcc88,0xff5566,
+    0xff8833,0xffdd44,0xff6644,0xffaa33,0xff5544,0xff9966,0xffcc55,0xff4455,
+    0xff7766,0xffbb44,0xff6633,0xffaa55,0xff8844,0xffdd55,0xff5533,
+    0xff9944,0xffcc66,0xff6655,0xffaa44,0xff7733,0xffdd55,
+  ];
+  const signInst=new THREE.InstancedMesh(
+    new THREE.BoxGeometry(1,.55,.06),
+    new THREE.MeshStandardMaterial({color:0xff88cc,emissive:0xff44aa,emissiveIntensity:4.5,roughness:.1}),
+    bCount);
+  const signColor=new THREE.Color();
+  BDATA.forEach(([x,z,w,h,d],i)=>{
+    dummy.position.set(x, h*.52, z+d/2+.04); dummy.rotation.set(0,0,0);
+    dummy.scale.set(w*.78, 1, 1); dummy.updateMatrix();
+    signInst.setMatrixAt(i,dummy.matrix);
+    signColor.set(signColors[i%signColors.length]);
+    signInst.setColorAt(i,signColor);
+  });
+  signInst.instanceMatrix.needsUpdate=true;
+  signInst.instanceColor.needsUpdate=true;
+  g0.add(signInst); // drawcall: 1
+
+  // ── 燈籠（Instanced）— 1 drawcall ────────────────
+  const lanternPos=[];
+  BDATA.forEach(([x,z,w,h,d],i)=>{
+    if(i%2===0){
+      for(let li=0;li<3;li++) lanternPos.push([x-w/2+.3+li*w*.35, h+.35, z]);
+    }
+  });
+  const lanInst=new THREE.InstancedMesh(
+    new THREE.SphereGeometry(.19,6,6),
+    new THREE.MeshStandardMaterial({color:0xff5500,emissive:0xff3300,emissiveIntensity:4.0,transparent:true,opacity:.92}),
+    lanternPos.length);
+  lanternPos.forEach(([x,y,z],i)=>{
+    dummy.position.set(x,y,z); dummy.scale.set(1,1,1); dummy.updateMatrix();
+    lanInst.setMatrixAt(i,dummy.matrix);
+  });
+  lanInst.instanceMatrix.needsUpdate=true;
+  g0.add(lanInst); // drawcall: 1
+
+  // ── 鳥居（Instanced 柱子）— 2 drawcall ───────────
+  const toriiData=[[-4,7,1,0xff44aa],[4,7,1,0x44aaff],[-5,-15,.85,0xffaa00],[5,-15,.85,0x44ffcc],[-7,-32,.7,0xff66ff],[7,-32,.7,0xffcc44]];
+  const toriiPoleInst=new THREE.InstancedMesh(
+    new THREE.CylinderGeometry(.13,.18,1,7),
+    new THREE.MeshStandardMaterial({color:0xcc1100,roughness:.6}), toriiData.length*2);
+  const toriiBeamInst=new THREE.InstancedMesh(
+    new THREE.BoxGeometry(1,.22,.26),
+    new THREE.MeshStandardMaterial({color:0xcc1100,roughness:.6}), toriiData.length);
+  let pi=0;
+  toriiData.forEach(([x,z,sc],idx)=>{
+    const h=6*sc;
+    [-1.1*sc,1.1*sc].forEach(dx=>{
+      dummy.position.set(x+dx,h/2,z); dummy.rotation.set(0,0,0); dummy.scale.set(1,h,1); dummy.updateMatrix();
+      toriiPoleInst.setMatrixAt(pi++,dummy.matrix);
+    });
+    dummy.position.set(x,h+.1,z); dummy.rotation.set(0,0,0); dummy.scale.set(3.2*sc,1,1); dummy.updateMatrix();
+    toriiBeamInst.setMatrixAt(idx,dummy.matrix);
+  });
+  toriiPoleInst.instanceMatrix.needsUpdate=true;
+  toriiBeamInst.instanceMatrix.needsUpdate=true;
+  g0.add(toriiPoleInst); g0.add(toriiBeamInst); // drawcall: 2
+
+  // ── 霓虹電線（LineSegments 合批）— 1 drawcall ─────
+  const wirePts=[];
+  [
+    [-8,6,5, 8,7,-1],[-8,8,-4, 8,9,5],[-8,7,-14,8,8,-4],
+    [-8,9,-24,8,10,-14],[-8,10,-34,8,11,-24],
+    [-18,11,-8,18,12,-8],[-18,13,-22,18,14,-22],
+    [-8,6,5,0,9,-20],[8,6,5,0,9,-20],
+    [-18,11,-8,-32,14,-18],[18,11,-8,32,14,-18],
+    [-8,8,-24,0,10,-20],[8,8,-24,0,10,-20],
+    [-32,14,-18,0,17,-60],[32,14,-18,0,17,-60],
+  ].forEach(d=>{
+    wirePts.push(new THREE.Vector3(d[0],d[1],d[2]), new THREE.Vector3(d[3],d[4],d[5]));
+  });
+  const wireObj=new THREE.LineSegments(
+    new THREE.BufferGeometry().setFromPoints(wirePts),
+    new THREE.LineBasicMaterial({color:0xffeecc,transparent:true,opacity:.65}));
+  g0.add(wireObj); // drawcall: 1
+
+  // ── 幾何合併工具 ─────────────────────────────────
+  function mergeGeos(geoArr){
+    // 先 toNonIndexed() 展開，再逐一拼接
+    const expanded = geoArr.map(g => g.index ? g.toNonIndexed() : g);
+    let totalVerts = 0;
+    expanded.forEach(g => { totalVerts += g.attributes.position.count; });
+    const positions = new Float32Array(totalVerts * 3);
+    const normals   = new Float32Array(totalVerts * 3);
+    let offset = 0;
+    expanded.forEach(g => {
+      const pos = g.attributes.position.array;
+      positions.set(pos, offset * 3);
+      if(g.attributes.normal){
+        normals.set(g.attributes.normal.array, offset * 3);
+      }
+      offset += g.attributes.position.count;
+    });
+    const merged = new THREE.BufferGeometry();
+    merged.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    merged.setAttribute('normal',   new THREE.BufferAttribute(normals, 3));
+    return merged;
+  }
+
+    // ── 五重塔（合批）── 3 drawcall ──────────────────
+  // 塔身合批
+  dbg("5/8 tower...");
+  const towerBodies=[], towerRoofs=[];
+  let ty=0;
+  [{w:7,h:3.2},{w:6,h:3.0},{w:5,h:2.8},{w:4,h:2.6},{w:3,h:2.4}].forEach(({w,h})=>{
+    const g=new THREE.BoxGeometry(w,h,w);
+    g.translate(0,ty+h/2,-20); towerBodies.push(g);
+    // 屋頂
+    const rv=new Float32Array([
+      -(w/2+.55),0,-(w/2+.55)+(-20), (w/2+.55),0,-(w/2+.55)+(-20), 0,.85,-20,
+       (w/2+.55),0,-(w/2+.55)+(-20), (w/2+.55),0, (w/2+.55)+(-20), 0,.85,-20,
+       (w/2+.55),0, (w/2+.55)+(-20), -(w/2+.55),0,(w/2+.55)+(-20), 0,.85,-20,
+      -(w/2+.55),0, (w/2+.55)+(-20), -(w/2+.55),0,-(w/2+.55)+(-20),0,.85,-20,
+    ]);
+    // 簡化：用扁Box代替pyramid
+    const rg=new THREE.BoxGeometry(w+1.1,.25,w+1.1); rg.translate(0,ty+h+.12,-20);
+    towerRoofs.push(rg);
+    ty+=h;
+  });
+  // 合并塔身
+  const towerBodyMerged=mergeGeos(towerBodies);
+  g0.add(new THREE.Mesh(towerBodyMerged, new THREE.MeshStandardMaterial({color:0x180a30,roughness:.6}))); // drawcall:1
+  const towerRoofMerged=mergeGeos(towerRoofs);
+  g0.add(new THREE.Mesh(towerRoofMerged, new THREE.MeshStandardMaterial({color:0x0d0520,roughness:.65}))); // drawcall:1
+
+  // 塔頂光環（Instanced）— 1 drawcall
+  dbg("6/8 rings...");
+  const ringColors=[0xff4488,0xff8800,0xffdd00,0x44ff44,0x44aaff,0x8844ff,0xff44ff];
+  const ringInst=new THREE.InstancedMesh(
+    new THREE.TorusGeometry(1,.055,6,24),
+    new THREE.MeshStandardMaterial({color:0xff88cc,emissive:0xff44aa,emissiveIntensity:3.8,transparent:true,opacity:.88}),
+    ringColors.length);
+  const ringColor=new THREE.Color();
+  const ringBaseY=ty+7.8;
+  ringColors.forEach((c,i)=>{
+    dummy.position.set(0,ringBaseY-i*.32,-20); dummy.rotation.set(Math.PI/2,0,0); dummy.scale.set(1+i*.28,1+i*.28,1); dummy.updateMatrix();
+    ringInst.setMatrixAt(i,dummy.matrix);
+    ringColor.set(c); ringInst.setColorAt(i,ringColor);
+  });
+  ringInst.instanceMatrix.needsUpdate=true; ringInst.instanceColor.needsUpdate=true;
+  g0.add(ringInst); // drawcall:1
+  // 塔頂杆
+  (()=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(.09,.13,7,7),new THREE.MeshStandardMaterial({color:0xaaaacc,roughness:.5}));m.position.set(0,ty+3.5,-20);g0.add(m);})(); // drawcall:1
+
+  // ── 燈柱（Instanced pole+head）— 2 drawcall ──────
+  dbg("7/8 lamps...");
+  const LPOS=[[-6,7],[-6,-2],[-6,-11],[-6,-20],[-6,-29],[-6,-38],[6,7],[6,-2],[6,-11],[6,-20],[6,-29],[6,-38],[-14,-6],[-14,-22],[14,-6],[14,-22]];
+  const lpPoleInst=new THREE.InstancedMesh(new THREE.CylinderGeometry(.055,.1,4.2,7),
+    new THREE.MeshStandardMaterial({color:0x888899,roughness:.6}), LPOS.length);
+  const lpHeadInst=new THREE.InstancedMesh(new THREE.SphereGeometry(.18,8,8),
+    new THREE.MeshStandardMaterial({color:0xffcc66,emissive:0xff8800,emissiveIntensity:3.5}), LPOS.length);
+  const lpColor=new THREE.Color();
+  LPOS.forEach(([x,z],i)=>{
+    dummy.position.set(x,2.1,z); dummy.rotation.set(0,0,0); dummy.scale.set(1,1,1); dummy.updateMatrix();
+    lpPoleInst.setMatrixAt(i,dummy.matrix);
+    dummy.position.set(x,4.5,z); dummy.scale.set(1,1,1); dummy.updateMatrix();
+    lpHeadInst.setMatrixAt(i,dummy.matrix);
+    lpColor.setHSL(i/LPOS.length,.95,.6); lpHeadInst.setColorAt(i,lpColor);
+  });
+  lpPoleInst.instanceMatrix.needsUpdate=true;
+  lpHeadInst.instanceMatrix.needsUpdate=true;
+  lpHeadInst.instanceColor.needsUpdate=true;
+  g0.add(lpPoleInst); g0.add(lpHeadInst); // drawcall: 2
+
+  // 燈柱環（Instanced，每柱3環）— 1 drawcall
+  const lampRingInst=new THREE.InstancedMesh(
+    new THREE.TorusGeometry(.4,.02,4,12),
+    new THREE.MeshStandardMaterial({color:0xffcc88,emissive:0xff8833,emissiveIntensity:2.8}),
+    LPOS.length*3);
+  const lampRingMetas=[];
+  let lri=0;
+  LPOS.forEach(([x,z],pi)=>{
+    for(let ri=0;ri<3;ri++){
+      dummy.position.set(x,3.8-ri*.22,z); dummy.rotation.set(Math.PI/2,0,0);
+      dummy.scale.set(1+ri*.3,1+ri*.3,1); dummy.updateMatrix();
+      lampRingInst.setMatrixAt(lri,dummy.matrix);
+      const c2=new THREE.Color().setHSL((pi/LPOS.length+ri*.12)%1,.95,.6);
+      lampRingInst.setColorAt(lri,c2);
+      lampRingMetas.push({x,z,y:3.8-ri*.22,ri,pi,idx:lri}); lri++;
+    }
+  });
+  lampRingInst.instanceMatrix.needsUpdate=true;
+  lampRingInst.instanceColor.needsUpdate=true;
+  g0.add(lampRingInst); // drawcall:1
+
+  // ── 霓虹魚（Instanced + Frustum Culling）— 1 drawcall ──
+  const FISH=[
+    // 低層 橘粉紅主調 + 少量藍青對比
+    [7,8,-6,0xff6644],[-6,10,-15,0x44ccff],[11,8,-24,0xff8833],[-13,10,-32,0xffcc44],
+    [4,9,-12,0xff4466],[-9,11,-22,0xff9944],[14,10,-8,0xffaa33],[-14,9,-18,0xff6688],
+    [3,8,-35,0xff5533],[-8,10,-40,0x44ddff],[16,10,-14,0xffdd55],[-16,10,-28,0xff8866],
+    // 中層
+    [5,15,-10,0xff7744],[-10,16,-20,0xffcc33],[12,14,-30,0xff5500],[-5,17,-38,0xff9966],
+    [18,15,-15,0xffaa55],[-18,16,-25,0xff6633],[8,15,-45,0xff8844],[-8,14,-50,0x55ccff],
+    [0,16,-18,0xff4455],[20,15,-35,0xffdd44],[-20,17,-12,0xff6655],[2,14,-55,0xffbb33],
+    // 高層
+    [0,22,-20,0xff7755],[6,23,-28,0xffee44],[-6,21,-35,0xff5544],[10,24,-15,0xff9933],
+    [-10,22,-42,0xff4455],[15,20,-22,0x44aaff],[-15,23,-18,0xff8833],[3,25,-50,0xffcc44],
+    // 超高
+    [0,30,-40,0xff6644],[8,32,-55,0xffaa33],[-8,28,-48,0x44bbff],[12,33,-30,0xff7744],
+    [-12,29,-60,0xffee55],[4,31,-65,0xff5533],[-4,34,-38,0xff9966],
+  ];
+  const fishInst=new THREE.InstancedMesh(
+    new THREE.SphereGeometry(.42,6,5),
+    new THREE.MeshStandardMaterial({color:0xff8844,emissive:0xff5500,emissiveIntensity:3.5,transparent:true,opacity:.9}),
+    FISH.length);
+  fishInst.frustumCulled=false; // 已手動控制可見性
+  const fishCol=new THREE.Color();
+  FISH.forEach(([x,y,z,col],i)=>{
+    dummy.position.set(x,y,z); dummy.scale.set(2.1,.82,1); dummy.rotation.set(0,0,0); dummy.updateMatrix();
+    fishInst.setMatrixAt(i,dummy.matrix);
+    fishCol.set(col); fishInst.setColorAt(i,fishCol);
+  });
+  fishInst.instanceMatrix.needsUpdate=true; fishInst.instanceColor.needsUpdate=true;
+  g0.add(fishInst); // drawcall:1
+
+  // ── 煙火（Points）— 1 drawcall ───────────────────
+  dbg("8/8 fireworks...");
+  const FW=500;
+  const fwP=new Float32Array(FW*3), fwC=new Float32Array(FW*3);
+  for(let i=0;i<FW;i++) fwP[i*3+1]=-999;
+  const fwGeo=new THREE.BufferGeometry();
+  fwGeo.setAttribute('position',new THREE.BufferAttribute(fwP,3));
+  fwGeo.setAttribute('color',  new THREE.BufferAttribute(fwC,3));
+  g0.add(new THREE.Points(fwGeo,
+    new THREE.PointsMaterial({size:.26,sizeAttenuation:true,transparent:true,opacity:.95,vertexColors:true})));
+  const fwData=[];
+  for(let i=0;i<FW;i++) fwData.push({a:false,x:0,y:0,z:0,vx:0,vy:0,vz:0,l:0,ml:1,r:1,g:1,b:1});
+  let fwH=0, fwT=0;
+  const FWSITES=[[0,18,-22],[8,16,-30],[-8,20,-15],[5,22,-40],[-5,19,-35],[12,17,-25],[-12,21,-18]];
+  let fwSi=0;
+  function shootFW(x,y,z){
+    const hue=Math.random(), cnt=30+Math.floor(Math.random()*20);
+    for(let i=0;i<cnt;i++){
+      const p=fwData[fwH++%FW], theta=Math.random()*Math.PI*2, phi=Math.random()*Math.PI, sp=1.8+Math.random()*3;
+      p.a=true; p.x=x; p.y=y; p.z=z; p.l=0; p.ml=.55+Math.random()*.7;
+      p.vx=Math.sin(phi)*Math.cos(theta)*sp; p.vy=Math.cos(phi)*sp*.6; p.vz=Math.sin(phi)*Math.sin(theta)*sp;
+      const c2=new THREE.Color().setHSL((hue+Math.random()*.25)%1,1,.7);
+      p.r=c2.r; p.g=c2.g; p.b=c2.b;
+    }
+  }
+  function updateFW(dt){
+    fwT+=dt; if(fwT>1.1){ fwT=0; const s=FWSITES[fwSi++%FWSITES.length]; shootFW(s[0],s[1],s[2]); }
+    const pp=fwGeo.attributes.position, cc=fwGeo.attributes.color;
+    fwData.forEach((p,i)=>{
+      if(!p.a){pp.array[i*3+1]=-999;return;}
+      p.l+=dt; if(p.l>p.ml){p.a=false;pp.array[i*3+1]=-999;return;}
+      p.x+=p.vx*dt*3; p.y+=p.vy*dt*3; p.z+=p.vz*dt*3; p.vy-=9*dt;
+      pp.array[i*3]=p.x; pp.array[i*3+1]=p.y; pp.array[i*3+2]=p.z;
+      const f=1-p.l/p.ml; cc.array[i*3]=p.r*f; cc.array[i*3+1]=p.g*f; cc.array[i*3+2]=p.b*f;
+    });
+    pp.needsUpdate=true; cc.needsUpdate=true;
+  }
+
+  // ── 彩葉角色 ─────────────────────────────────────
+  dbg("9/9 character...");
+  const charG=new THREE.Group(); charG.position.set(0,0,3);
+  const skinM=new THREE.MeshStandardMaterial({color:0xf5c896,roughness:.8});
+  const hairM=new THREE.MeshStandardMaterial({color:0x251030,roughness:.9});
+  const bodyM=new THREE.MeshStandardMaterial({color:0x1a1a2e,roughness:.7});
+  function addMesh(geo, mat, px, py, pz, sx, sy, sz, rx, ry, rz){
+    const m=new THREE.Mesh(geo, mat);
+    if(px!==undefined) m.position.set(px,py,pz);
+    if(sx!==undefined) m.scale.set(sx,sy,sz);
+    if(rx!==undefined) m.rotation.set(rx,ry,rz);
+    charG.add(m); return m;
+  }
+  // 軀幹
+  addMesh(new THREE.CylinderGeometry(.27,.32,1.0,8), bodyM, 0,1.0,0);
+  // 腿
+  addMesh(new THREE.CylinderGeometry(.1,.12,.82,7), bodyM, -0.14,.35,0);
+  addMesh(new THREE.CylinderGeometry(.1,.12,.82,7), bodyM,  0.14,.35,0);
+  // 頭（臉皮）
+  addMesh(new THREE.SphereGeometry(.27,12,10), skinM, 0,1.73,0);
+  // 頭髮
+  const hairHead=addMesh(new THREE.SphereGeometry(.30,10,9), hairM, 0,1.80,0);
+  hairHead.scale.set(1,.84,1);
+  // 側髮
+  addMesh(new THREE.BoxGeometry(.12,.68,.1), hairM, -0.28,1.53,0);
+  addMesh(new THREE.BoxGeometry(.12,.68,.1), hairM,  0.28,1.53,0);
+  // 貓耳左右
+  (()=>{const e=new THREE.Mesh(new THREE.ConeGeometry(.09,.21,4),hairM); e.position.set(-0.21,2.08,0); e.rotation.z=-0.18; charG.add(e);})();
+  (()=>{const e=new THREE.Mesh(new THREE.ConeGeometry(.09,.21,4),hairM); e.position.set( 0.21,2.08,0); e.rotation.z= 0.18; charG.add(e);})();
+  // 耳內粉
+  const earInM=new THREE.MeshStandardMaterial({color:0xc4896a,roughness:.9});
+  (()=>{const e=new THREE.Mesh(new THREE.ConeGeometry(.055,.12,4),earInM); e.position.set(-0.21,2.08,.01); e.rotation.z=-0.18; charG.add(e);})();
+  (()=>{const e=new THREE.Mesh(new THREE.ConeGeometry(.055,.12,4),earInM); e.position.set( 0.21,2.08,.01); e.rotation.z= 0.18; charG.add(e);})();
+  // 眼（左右）
+  const eyeM=new THREE.MeshStandardMaterial({color:0x2a6a2a,emissive:0x1a4a1a,emissiveIntensity:.6});
+  addMesh(new THREE.SphereGeometry(.055,8,8), eyeM, -0.10,1.73,.26);
+  addMesh(new THREE.SphereGeometry(.055,8,8), eyeM,  0.10,1.73,.26);
+  // 額頭菱形
+  const gemM=new THREE.MeshStandardMaterial({color:0xdd2244,emissive:0xcc1133,emissiveIntensity:2.0});
+  addMesh(new THREE.OctahedronGeometry(.04), gemM, 0,1.80,.27);
+  // 頸圈
+  addMesh(new THREE.TorusGeometry(.12,.02,6,14), new THREE.MeshStandardMaterial({color:0x111118}), 0,1.44,0, 1,1,1, Math.PI/2,0,0);
+  g0.add(charG);
+
+  // ══════════════════════════════════════════════════
+  //  特色建築 + 大螢幕
+  // ══════════════════════════════════════════════════
+
+  // ── 工具：快速加 Mesh ─────────────────────────────
+  function addObj(geo, mat, px,py,pz, sx,sy,sz, rx,ry,rz){
+    const m=new THREE.Mesh(geo,mat);
+    m.position.set(px,py,pz);
+    if(sx!==undefined) m.scale.set(sx,sy,sz);
+    if(rx!==undefined) m.rotation.set(rx,ry,rz);
+    g0.add(m); return m;
+  }
+  function emMat(col,ei=3.5){ return new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:ei,roughness:.1}); }
+
+  // ── 1. 大型牌坊（入口正面）─────────────────────────
+  (()=>{
+    const pm=new THREE.MeshStandardMaterial({color:0xcc2200,emissive:0x550800,emissiveIntensity:.5,roughness:.5});
+    // 四根柱
+    [[-3,0,8],[3,0,8],[-3,0,11],[3,0,11]].forEach(([x,y,z])=>{
+      addObj(new THREE.CylinderGeometry(.22,.28,7,8),pm, x,3.5,z);
+    });
+    // 橫樑
+    addObj(new THREE.BoxGeometry(7.5,.4,.35),pm, 0,7.2,8);
+    addObj(new THREE.BoxGeometry(7.5,.4,.35),pm, 0,7.2,11);
+    addObj(new THREE.BoxGeometry(7.5,.3,.3),pm, 0,6.4,8);
+    // 屋簷
+    addObj(new THREE.BoxGeometry(8.2,.15,.6),new THREE.MeshStandardMaterial({color:0x3a0a06,roughness:.7}), 0,7.6,9.5);
+    // 霓虹裝飾
+    addObj(new THREE.BoxGeometry(6.8,.08,.06),emMat(0xff6633), 0,7.35,7.98);
+    addObj(new THREE.BoxGeometry(6.8,.08,.06),emMat(0xffcc44), 0,6.55,7.98);
+  })();
+
+  // ── 2. 神社本殿（右側）──────────────────────────────
+  (()=>{
+    const wm=new THREE.MeshStandardMaterial({color:0x2a1006,roughness:.7});
+    const rm=new THREE.MeshStandardMaterial({color:0x4a0a04,roughness:.65});
+    // 石階
+    [[0,.25,0],[0,.55,0],[0,.85,0]].forEach(([x,y,z],i)=>{
+      addObj(new THREE.BoxGeometry(9-i*1.2,.35,7-i*.8),wm, 16,y,-35);
+    });
+    // 主殿
+    addObj(new THREE.BoxGeometry(7,5.5,5.5),wm, 16,3.75,-35);
+    // 屋頂（多層）
+    addObj(new THREE.BoxGeometry(8.2,.22,6.6),rm, 16,6.5,-35);
+    addObj(new THREE.BoxGeometry(6.5,.22,5.2),rm, 16,7.8,-35);
+    addObj(new THREE.BoxGeometry(4.5,.22,3.8),rm, 16,9.0,-35);
+    // 千木（屋頂交叉裝飾）
+    const km=new THREE.MeshStandardMaterial({color:0xddddcc,roughness:.5});
+    addObj(new THREE.BoxGeometry(.12,.12,1.8),km, 16,9.4,-35, 1,1,1, .4,0,0);
+    addObj(new THREE.BoxGeometry(.12,.12,1.8),km, 16,9.4,-35, 1,1,1, -.4,0,0);
+    // 鳥居
+    addObj(new THREE.CylinderGeometry(.14,.18,5.5,8),new THREE.MeshStandardMaterial({color:0xdd1100,roughness:.55}), 13.5,2.75,-29);
+    addObj(new THREE.CylinderGeometry(.14,.18,5.5,8),new THREE.MeshStandardMaterial({color:0xdd1100,roughness:.55}), 18.5,2.75,-29);
+    addObj(new THREE.BoxGeometry(6,.25,.25),new THREE.MeshStandardMaterial({color:0xdd1100,roughness:.55}), 16,5.6,-29);
+    // 燈光
+    const sl=new THREE.PointLight(0xff6622,2.0,20); sl.position.set(16,5,-33); g0.add(sl);
+    // 霓虹
+    addObj(new THREE.BoxGeometry(5.5,.07,.07),emMat(0xff8833), 16,6.6,-34.97);
+    addObj(new THREE.BoxGeometry(5.5,.07,.07),emMat(0xffcc44), 16,7.9,-34.97);
+  })();
+
+  // ── 3. 圓形劇場（廣場左側）──────────────────────────
+  (()=>{
+    const stages=8;
+    for(let i=0;i<stages;i++){
+      const ang=i/stages*Math.PI*2;
+      const r=6, x=-22+Math.cos(ang)*r, z=-8+Math.sin(ang)*r;
+      addObj(new THREE.CylinderGeometry(.2,.25,5,7),
+        new THREE.MeshStandardMaterial({color:0x331100,roughness:.6}), x,2.5,z);
+      addObj(new THREE.SphereGeometry(.2,8,8),emMat(new THREE.Color().setHSL(i/stages,.9,.55).getHex()), x,5.2,z);
+    }
+    // 中央舞台
+    addObj(new THREE.CylinderGeometry(2.5,.5,1,24),
+      new THREE.MeshStandardMaterial({color:0x1a0808,roughness:.4,metalness:.6}), -22,.5,-8);
+    addObj(new THREE.CylinderGeometry(2.2,.2,.12,24),emMat(0xff6633,.8), -22,1.08,-8);
+    const sl2=new THREE.PointLight(0xff8844,3.5,18); sl2.position.set(-22,3,-8); g0.add(sl2);
+  })();
+
+  // ── 4. 商店街拱廊（中央街道上方）────────────────────
+  (()=>{
+    const am=new THREE.MeshStandardMaterial({color:0x220a04,roughness:.7});
+    // 拱柱
+    for(let z=-2;z>=-40;z-=8){
+      addObj(new THREE.CylinderGeometry(.12,.16,5,7),am, -5.5,2.5,z);
+      addObj(new THREE.CylinderGeometry(.12,.16,5,7),am,  5.5,2.5,z);
+      // 橫拱
+      addObj(new THREE.BoxGeometry(12,.12,.12),emMat(0xffeecc,.5), 0,5.1,z);
+    }
+    // 燈串（垂墜彩燈）
+    const lanM=new THREE.MeshStandardMaterial({color:0xff4400,emissive:0xff2200,emissiveIntensity:3.5,transparent:true,opacity:.9});
+    for(let z=-2;z>=-40;z-=2){
+      const sway=Math.sin(z*.7)*.4;
+      addObj(new THREE.SphereGeometry(.12,6,6),lanM, sway,4.2+Math.sin(z*.5)*.3,z);
+    }
+  })();
+
+  // ── 5. 佛塔（左前方）────────────────────────────────
+  (()=>{
+    const bm=new THREE.MeshStandardMaterial({color:0x1e0c04,roughness:.65});
+    const gm=new THREE.MeshStandardMaterial({color:0xaa8833,roughness:.4,metalness:.5});
+    let by=0;
+    [5,4.2,3.5,2.8,2.2].forEach((w,i)=>{
+      const h=1.8;
+      addObj(new THREE.CylinderGeometry(w/2*.9,w/2,h,8),bm, -20,by+h/2,-50);
+      // 金色屋緣
+      addObj(new THREE.TorusGeometry(w/2+.1,.08,5,20),gm, -20,by+h,-50, 1,1,1, Math.PI/2,0,0);
+      by+=h;
+    });
+    // 寶珠
+    addObj(new THREE.SphereGeometry(.4,10,10),gm, -20,by+.5,-50);
+    addObj(new THREE.CylinderGeometry(.04,.04,2.5,6),gm, -20,by+1.8,-50);
+    const bl=new THREE.PointLight(0xffcc44,2.5,22); bl.position.set(-20,5,-50); g0.add(bl);
+  })();
+
+  // ── 6. 風車（右後方，旋轉）──────────────────────────
+  const windmillBlades=[];
+  (()=>{
+    const pm2=new THREE.MeshStandardMaterial({color:0xcc9944,roughness:.6});
+    const em2=emMat(0xffcc44,2);
+    addObj(new THREE.CylinderGeometry(.2,.3,8,8),pm2, 22,4,-45);
+    // 葉片
+    for(let i=0;i<4;i++){
+      const blade=new THREE.Mesh(new THREE.BoxGeometry(.15,2.2,.06),pm2);
+      blade.position.set(22,9,-45);
+      const pivot=new THREE.Group();
+      pivot.position.set(22,9,-45);
+      const inner=new THREE.Mesh(new THREE.BoxGeometry(.15,2.2,.06),pm2);
+      const ang=i/4*Math.PI*2;
+      inner.position.set(Math.cos(ang)*1.1,Math.sin(ang)*1.1,0);
+      inner.rotation.z=ang;
+      pivot.add(inner);
+      g0.add(pivot);
+      windmillBlades.push(pivot);
+    }
+    addObj(new THREE.SphereGeometry(.3,8,8),em2, 22,9,-45);
+  })();
+
+  // ══════════════════════════════════════════════════
+  //  程序紋理工廠 v3（高精度Canvas貼圖）
+  // ══════════════════════════════════════════════════
+  function makeCanvasTex(w,h,fn){
+    const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+    fn(cv.getContext('2d'),w,h);
+    const t=new THREE.CanvasTexture(cv);
+    t.wrapS=t.wrapT=THREE.RepeatWrapping;
+    return t;
+  }
+
+  // ── 高級木紋貼圖 (512×512) ─────────────────────
+  const woodTex=makeCanvasTex(512,512,(ctx,W,H)=>{
+    // 底色漸層（年輪中心到邊緣）
+    const bg=ctx.createRadialGradient(W*.5,H*.3,10,W*.5,H*.5,W*.7);
+    bg.addColorStop(0,'#5a2e10'); bg.addColorStop(.4,'#3d1e08'); bg.addColorStop(.8,'#4a2510'); bg.addColorStop(1,'#3a1a06');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    // 木板縱向條紋
+    for(let i=0;i<120;i++){
+      const x=Math.random()*W, w2=.5+Math.random()*2.5, a=.04+Math.random()*.18;
+      const isLight=Math.random()>.5;
+      ctx.fillStyle=isLight?`rgba(100,55,20,${a})`:`rgba(8,3,0,${a*1.5})`;
+      ctx.fillRect(x,0,w2,H);
+    }
+    // 橫向年輪紋（細弧）
+    for(let i=0;i<40;i++){
+      const cy=Math.random()*H*1.4-H*.2, r=100+Math.random()*200;
+      const a=.03+Math.random()*.12;
+      ctx.strokeStyle=Math.random()>.5?`rgba(80,40,10,${a})`:`rgba(20,8,2,${a})`;
+      ctx.lineWidth=.5+Math.random()*1.5;
+      ctx.beginPath(); ctx.arc(W*.5,cy,r,0,Math.PI*2); ctx.stroke();
+    }
+    // 細橫紋光澤
+    for(let y=0;y<H;y+=2){
+      const a=Math.random()*.05;
+      ctx.fillStyle=`rgba(200,130,60,${a})`;
+      ctx.fillRect(0,y,W,1);
+    }
+    // 頂層光澤感（斜向高光）
+    const hl=ctx.createLinearGradient(0,0,W,H);
+    hl.addColorStop(0,'rgba(255,180,80,0)');
+    hl.addColorStop(.3,'rgba(255,180,80,0.08)');
+    hl.addColorStop(.5,'rgba(255,180,80,0.14)');
+    hl.addColorStop(.7,'rgba(255,180,80,0.06)');
+    hl.addColorStop(1,'rgba(255,180,80,0)');
+    ctx.fillStyle=hl; ctx.fillRect(0,0,W,H);
+    // 表面細噪點
+    for(let i=0;i<5000;i++){
+      ctx.fillStyle=`rgba(0,0,0,${Math.random()*.06})`;
+      ctx.fillRect(Math.random()*W,Math.random()*H,1,1);
+    }
+  });
+  woodTex.repeat.set(2,4);
+
+  // ── 高級地板木板紋 (512×512) ──────────────────
+  const floorTex=makeCanvasTex(512,512,(ctx,W,H)=>{
+    const PW=W/5; // 5塊板
+    for(let col=0;col<5;col++){
+      const x=col*PW;
+      const hue=28+col*4, sat=55+col*3, lum=16+col*2;
+      ctx.fillStyle=`hsl(${hue},${sat}%,${lum}%)`; ctx.fillRect(x,0,PW,H);
+      // 每塊板的木紋
+      for(let i=0;i<30;i++){
+        const fy=Math.random()*H, fw=PW*.8, fa=.03+Math.random()*.1;
+        ctx.fillStyle=`rgba(8,3,0,${fa})`; ctx.fillRect(x+Math.random()*PW*.2,fy,fw,Math.random()*2+.5);
+      }
+      // 板縫陰影
+      const sg=ctx.createLinearGradient(x,0,x+3,0);
+      sg.addColorStop(0,'rgba(0,0,0,0.7)'); sg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=sg; ctx.fillRect(x,0,4,H);
+      // 右側高光
+      const hg=ctx.createLinearGradient(x+PW-4,0,x+PW,0);
+      hg.addColorStop(0,'rgba(255,160,60,0)'); hg.addColorStop(1,'rgba(255,160,60,0.08)');
+      ctx.fillStyle=hg; ctx.fillRect(x+PW-4,0,4,H);
+    }
+    // 全局反光漸層
+    const refl=ctx.createLinearGradient(0,0,W,H*.5);
+    refl.addColorStop(0,'rgba(255,150,60,0)');
+    refl.addColorStop(.4,'rgba(255,150,60,0.12)');
+    refl.addColorStop(.8,'rgba(255,150,60,0.04)');
+    refl.addColorStop(1,'rgba(255,150,60,0)');
+    ctx.fillStyle=refl; ctx.fillRect(0,0,W,H);
+    // 細噪點
+    for(let i=0;i<6000;i++){
+      ctx.fillStyle=`rgba(0,0,0,${Math.random()*.04})`;
+      ctx.fillRect(Math.random()*W,Math.random()*H,1,1);
+    }
+  });
+  floorTex.repeat.set(3,6);
+
+  // ── 高精朱漆（朱紅漆質感）512×256 ────────────
+  const lacquerTex=makeCanvasTex(512,256,(ctx,W,H)=>{
+    // 底漆（深紅）
+    ctx.fillStyle='#880800'; ctx.fillRect(0,0,W,H);
+    // 主色漸層
+    const mg=ctx.createLinearGradient(0,0,W,0);
+    mg.addColorStop(0,'rgba(160,10,0,1)');
+    mg.addColorStop(.2,'rgba(220,20,5,1)');
+    mg.addColorStop(.45,'rgba(255,40,15,1)');
+    mg.addColorStop(.6,'rgba(230,25,8,1)');
+    mg.addColorStop(.85,'rgba(200,15,5,1)');
+    mg.addColorStop(1,'rgba(160,10,0,1)');
+    ctx.fillStyle=mg; ctx.fillRect(0,0,W,H);
+    // 縱向漆紋（細微流淌感）
+    for(let i=0;i<80;i++){
+      const x=Math.random()*W, w2=.3+Math.random()*.8;
+      ctx.fillStyle=`rgba(${Math.random()>0.5?255:80},0,0,${.04+Math.random()*.1})`;
+      ctx.fillRect(x,0,w2,H);
+    }
+    // 高光層（模擬漆面澤感）
+    const hl1=ctx.createLinearGradient(0,0,W*.4,0);
+    hl1.addColorStop(0,'rgba(255,200,150,0)');
+    hl1.addColorStop(.5,'rgba(255,200,150,0.22)');
+    hl1.addColorStop(1,'rgba(255,200,150,0)');
+    ctx.fillStyle=hl1; ctx.fillRect(0,0,W*.4,H);
+    // 細橫線（漆刷痕跡）
+    for(let y=0;y<H;y+=4){
+      ctx.fillStyle=`rgba(${Math.random()>0.5?200:50},0,0,${Math.random()*.06})`;
+      ctx.fillRect(0,y,W,1);
+    }
+    // 邊緣深化
+    const edge=ctx.createLinearGradient(0,0,W,0);
+    edge.addColorStop(0,'rgba(0,0,0,0.3)');
+    edge.addColorStop(.05,'rgba(0,0,0,0)');
+    edge.addColorStop(.95,'rgba(0,0,0,0)');
+    edge.addColorStop(1,'rgba(0,0,0,0.3)');
+    ctx.fillStyle=edge; ctx.fillRect(0,0,W,H);
+    // 表面噪點（讓質感更真實）
+    for(let i=0;i<4000;i++){
+      ctx.fillStyle=`rgba(${Math.random()>0.5?255:0},0,0,${Math.random()*.04})`;
+      ctx.fillRect(Math.random()*W,Math.random()*H,1,1);
+    }
+  });
+  lacquerTex.repeat.set(1,4);
+
+  // ── 石材貼圖 512×512 ──────────────────────────
+  const stoneTex=makeCanvasTex(512,512,(ctx,W,H)=>{
+    ctx.fillStyle='#383640'; ctx.fillRect(0,0,W,H);
+    // 石紋（大理石感）
+    for(let i=0;i<40;i++){
+      const sx=Math.random()*W, sy=Math.random()*H;
+      const gv=ctx.createLinearGradient(sx,sy,sx+Math.random()*120-60,sy+Math.random()*120-60);
+      const a=.06+Math.random()*.18;
+      gv.addColorStop(0,`rgba(200,200,220,0)`);
+      gv.addColorStop(.5,`rgba(180,180,210,${a})`);
+      gv.addColorStop(1,`rgba(200,200,220,0)`);
+      ctx.strokeStyle=gv; ctx.lineWidth=.5+Math.random()*2;
+      ctx.beginPath();
+      const pts=3+Math.floor(Math.random()*4);
+      ctx.moveTo(sx,sy);
+      for(let p=0;p<pts;p++){ ctx.lineTo(sx+Math.random()*80-40,sy+Math.random()*80-40); }
+      ctx.stroke();
+    }
+    // 石縫
+    ctx.strokeStyle='rgba(8,6,12,0.55)'; ctx.lineWidth=2;
+    for(let r=0;r<7;r++){
+      const y=r*H/6+Math.random()*15-7;
+      ctx.beginPath(); ctx.moveTo(0,y);
+      for(let x=0;x<=W;x+=20){ ctx.lineTo(x,y+Math.random()*6-3); }
+      ctx.stroke();
+    }
+    for(let c=0;c<7;c++){
+      const x=c*W/6+Math.random()*15-7;
+      ctx.beginPath(); ctx.moveTo(x,0);
+      for(let y=0;y<=H;y+=20){ ctx.lineTo(x+Math.random()*6-3,y); }
+      ctx.stroke();
+    }
+    // 顆粒感
+    for(let i=0;i<8000;i++){
+      const v=Math.random()*.12;
+      ctx.fillStyle=`rgba(${Math.random()>0.5?220:50},${Math.random()>0.5?220:50},240,${v})`;
+      ctx.fillRect(Math.random()*W,Math.random()*H,1,1);
+    }
+    // 表面微光澤
+    const gloss=ctx.createLinearGradient(0,0,W,H);
+    gloss.addColorStop(0,'rgba(255,255,255,0)');
+    gloss.addColorStop(.5,'rgba(255,255,255,0.04)');
+    gloss.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=gloss; ctx.fillRect(0,0,W,H);
+  });
+  stoneTex.repeat.set(3,3);
+
+  // ── 高精水面貼圖 512×512 + 動態水面ShaderMaterial工廠 ──
+  const waterTex=makeCanvasTex(512,512,(ctx,W,H)=>{
+    ctx.fillStyle='#06101e'; ctx.fillRect(0,0,W,H);
+    const wbg=ctx.createRadialGradient(W/2,H/2,20,W/2,H/2,W*.6);
+    wbg.addColorStop(0,'rgba(25,70,120,0.55)'); wbg.addColorStop(.5,'rgba(10,35,70,0.35)'); wbg.addColorStop(1,'rgba(3,12,30,0.2)');
+    ctx.fillStyle=wbg; ctx.fillRect(0,0,W,H);
+    /* 波紋系統（多中心橢圓） */
+    for(let ci=0;ci<6;ci++){
+      const cx=W*(0.15+ci*.14),cy=H*(0.2+ci*.12);
+      for(let r=5;r<W*.8;r+=20+ci*3){
+        const a=.05+Math.random()*.12;
+        ctx.strokeStyle=`rgba(${100+ci*15},${180+ci*8},255,${a})`;
+        ctx.lineWidth=.5+Math.random()*.8;
+        ctx.beginPath(); ctx.ellipse(cx,cy,r,r*(.25+ci*.05),ci*.3,0,Math.PI*2); ctx.stroke();
+      }
+    }
+    /* 橫向波光條 */
+    for(let i=0;i<80;i++){
+      const y=Math.random()*H;
+      const wg=ctx.createLinearGradient(0,y,W,y);
+      const a=.04+Math.random()*.1;
+      wg.addColorStop(0,'rgba(100,180,255,0)'); wg.addColorStop(.3,`rgba(120,200,255,${a})`);
+      wg.addColorStop(.7,`rgba(80,160,220,${a*.7})`); wg.addColorStop(1,'rgba(100,180,255,0)');
+      ctx.strokeStyle=wg; ctx.lineWidth=.4;
+      ctx.beginPath(); ctx.moveTo(0,y);
+      for(let x2=0;x2<W;x2+=6){ ctx.lineTo(x2,y+Math.sin(x2*.18+i)*.7); }
+      ctx.stroke();
+    }
+    /* 光斑（模擬燈光在水面的倒影碎片） */
+    for(let i=0;i<45;i++){
+      const x2=Math.random()*W,y=Math.random()*H,r=4+Math.random()*18;
+      const lg=ctx.createRadialGradient(x2,y,0,x2,y,r);
+      lg.addColorStop(0,'rgba(220,245,255,0.22)'); lg.addColorStop(.5,'rgba(160,210,255,0.1)'); lg.addColorStop(1,'rgba(100,180,255,0)');
+      ctx.fillStyle=lg; ctx.beginPath(); ctx.ellipse(x2,y,r,r*.35,0,0,Math.PI*2); ctx.fill();
+    }
+    /* 霓虹橘色倒影光條 */
+    for(let i=0;i<20;i++){
+      const y=Math.random()*H*.4+H*.6;
+      const og=ctx.createLinearGradient(0,y,W,y);
+      og.addColorStop(0,'rgba(255,100,30,0)'); og.addColorStop(.5,`rgba(255,130,50,${Math.random()*.12})`); og.addColorStop(1,'rgba(255,100,30,0)');
+      ctx.fillStyle=og; ctx.fillRect(0,y,W,Math.random()*2+.5);
+    }
+    for(let i=0;i<4000;i++){
+      ctx.fillStyle=`rgba(0,8,20,${Math.random()*.07})`; ctx.fillRect(Math.random()*W,Math.random()*H,Math.random()*3+1,1);
+    }
+  });
+  waterTex.repeat.set(3,3);
+
+  /* 動態水面 ShaderMaterial（用於水庭+緋柱海面） */
+  function makeWaterMat(deepCol,shallowCol,emissiveStr=0.6){
+    return new THREE.ShaderMaterial({
+      transparent:true, side:THREE.FrontSide,
+      uniforms:{uT:{value:0},uDeep:{value:new THREE.Color(deepCol)},uShallow:{value:new THREE.Color(shallowCol)},uEm:{value:emissiveStr}},
+      vertexShader:`varying vec2 vUv;varying vec3 vPos;void main(){vUv=uv;vPos=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+      fragmentShader:`
+        varying vec2 vUv; varying vec3 vPos;
+        uniform float uT,uEm; uniform vec3 uDeep,uShallow;
+        float h(vec2 p){p=fract(p*vec2(127.1,311.7));p+=dot(p,p+19.19);return fract(p.x*p.y);}
+        float n(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);
+          return mix(mix(h(i),h(i+vec2(1,0)),u.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),u.x),u.y);}
+        float fbm2(vec2 p){return n(p)*.5+n(p*2.1)*.25+n(p*4.3)*.125;}
+        void main(){
+          /* 複合波紋 */
+          vec2 uv=vUv*12.;
+          float t=uT*.8;
+          float w1=n(uv+vec2(t*.15,t*.08));
+          float w2=n(uv*1.8-vec2(t*.12,t*.18));
+          float w3=n(uv*3.2+vec2(t*.22,-t*.1));
+          float wave=w1*.5+w2*.3+w3*.2;
+          /* 基底水色 */
+          vec3 col=mix(uDeep,uShallow,smoothstep(.3,.75,wave));
+          /* 鏡面高光（模擬燈光反射碎片） */
+          float spec=pow(max(w1*w2*4.-1.2,0.),2.5);
+          col+=vec3(1.,.85,.6)*spec*1.8;
+          /* 霓虹橘色反射條 */
+          float strip=sin((vUv.y+uT*.04)*60.+n(vUv*8.+uT*.1)*2.)*.5+.5;
+          float stripMask=smoothstep(.88,.96,strip)*smoothstep(.5,1.,wave);
+          col+=vec3(1.,.5,.15)*stripMask*.6;
+          /* 冷藍反射 */
+          float blueRef=sin((vUv.x+uT*.02)*40.+n(vUv*6.-uT*.08)*1.8)*.5+.5;
+          col+=vec3(.15,.45,1.)*smoothstep(.9,.98,blueRef)*smoothstep(.5,.9,w1)*.45;
+          /* 發光微粒（倒影碎光） */
+          float sparkle=step(.994,h(floor(vUv*180.+uT*.3)));
+          col+=sparkle*vec3(1.,.95,.8)*2.5;
+          /* 邊緣深色（讓水面有縱深） */
+          float edge=min(vUv.x,min(1.-vUv.x,min(vUv.y,1.-vUv.y)))*4.;
+          col*=smoothstep(0.,.3,edge)*.7+.3;
+          float alpha=.88+w1*.08;
+          gl_FragColor=vec4(col,alpha);
+        }`
+    });
+  }
+  /* 儲存所有水面material以便每幀更新uT */
+  const waterMats=[];
+
+  // ── 障子紙拉門 256×256 ───────────────────────
+  const shojiTex=makeCanvasTex(256,256,(ctx,W,H)=>{
+    // 紙張底色（暖白）
+    ctx.fillStyle='#f2e8d0'; ctx.fillRect(0,0,W,H);
+    // 紙質感（細纖維）
+    for(let i=0;i<4000;i++){
+      const x=Math.random()*W, y=Math.random()*H;
+      const a=Math.random()*.08+.01;
+      ctx.strokeStyle=`rgba(160,120,60,${a})`;
+      ctx.lineWidth=.3;
+      ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+Math.random()*8-4,y+Math.random()*3-1.5); ctx.stroke();
+    }
+    // 格子框架（細木條）
+    const gx=32, gy=40;
+    ctx.strokeStyle='rgba(80,50,20,0.65)'; ctx.lineWidth=2;
+    for(let x=0;x<=W;x+=gx){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for(let y=0;y<=H;y+=gy){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+    // 格子邊框加粗
+    ctx.strokeStyle='rgba(60,35,15,0.85)'; ctx.lineWidth=3;
+    ctx.strokeRect(1,1,W-2,H-2);
+    // 暖光透過感
+    const wl=ctx.createRadialGradient(W*.5,H*.4,0,W*.5,H*.4,W*.7);
+    wl.addColorStop(0,'rgba(255,230,160,0.2)');
+    wl.addColorStop(1,'rgba(255,230,160,0)');
+    ctx.fillStyle=wl; ctx.fillRect(0,0,W,H);
+  });
+
+  // ── 天花板貼圖 512×256 ─────────────────────
+  const ceilTex=makeCanvasTex(512,256,(ctx,W,H)=>{
+    ctx.fillStyle='#0e0806'; ctx.fillRect(0,0,W,H);
+    // 木板橫線（天花板方向）
+    for(let y=0;y<H;y+=16){
+      const a=.2+Math.random()*.3;
+      ctx.fillStyle=`rgba(50,25,8,${a})`; ctx.fillRect(0,y,W,1.5);
+      ctx.fillStyle=`rgba(80,40,12,${a*.4})`; ctx.fillRect(0,y+2,W,.5);
+    }
+    // 縱向暗條（木板縫）
+    for(let x=0;x<W;x+=64){
+      ctx.fillStyle='rgba(0,0,0,0.35)'; ctx.fillRect(x,0,2,H);
+    }
+    // 光澤（燈光從下方照）
+    const bg2=ctx.createLinearGradient(0,H,0,0);
+    bg2.addColorStop(0,'rgba(255,140,50,0.12)');
+    bg2.addColorStop(.6,'rgba(255,120,40,0.05)');
+    bg2.addColorStop(1,'rgba(255,120,40,0)');
+    ctx.fillStyle=bg2; ctx.fillRect(0,0,W,H);
+    // 煙燻感
+    for(let i=0;i<2000;i++){
+      ctx.fillStyle=`rgba(0,0,0,${Math.random()*.08})`;
+      ctx.fillRect(Math.random()*W,Math.random()*H,Math.random()*4+1,1);
+    }
+  });
+  ceilTex.repeat.set(4,3);
+
+  // ── 輔助：帶貼圖材質 ──────────────────────────────
+  function mTex(col,tex,rough=.7,metal=0,emCol=null,emInt=0){
+    const p={color:col,map:tex,roughness:rough,metalness:metal};
+    if(emCol!==null){p.emissive=emCol;p.emissiveIntensity=emInt;}
+    return new THREE.MeshStandardMaterial(p);
+  }
+
+  // ── 場景Group管理（用於可見性剔除）────────────────
+
+  // ══════════════════════════════════════════════════
+  //  傳送場景 1：浮世水庭 (FLOATING GARDEN) — 位置 (150, 0, 0)
+  //  月光下的水上日式庭院，比參考圖更廣大精細
+  // ══════════════════════════════════════════════════
+  {
+    const g1=new THREE.Group(); scene.add(g1); sceneGroups[1]=g1;
+    const OX=150, OZ=0;
+    function aG(geo,mat,x,y,z,sx,sy,sz,rx,ry,rz){
+      const m=new THREE.Mesh(geo,mat);
+      m.position.set(x,y,z);
+      if(sx!==undefined) m.scale.set(sx,sy,sz);
+      if(rx!==undefined) m.rotation.set(rx,ry,rz);
+      g1.add(m); return m;
+    }
+
+    // 廣大水面（動態波紋ShaderMaterial）
+    const wMat=makeWaterMat(0x05101e,0x0a2840,0.65);
+    waterMats.push(wMat);
+    aG(new THREE.PlaneGeometry(90,90,32,32), wMat, OX,0.01,OZ, 1,1,1, -Math.PI/2,0,0);
+
+    // 水面底層發光（保留輔助輝光）
+    const wGlow=new THREE.MeshStandardMaterial({color:0x001a44,emissive:0x001a44,emissiveIntensity:1.0,transparent:true,opacity:.28});
+    aG(new THREE.PlaneGeometry(78,78), wGlow, OX,0.025,OZ, 1,1,1, -Math.PI/2,0,0);
+
+    // 大型木製平台（地板貼圖）
+    const platMat=mTex(0x2a1408,woodTex,.6,.05);
+    const platMat2=mTex(0x1e0e06,woodTex,.65,.04);
+
+    // 主建築基台（大）
+    aG(new THREE.BoxGeometry(16,0.4,14), platMat, OX,0.2,OZ);
+    // 主台延伸廊道（左右各一）
+    aG(new THREE.BoxGeometry(8,0.3,4), platMat2, OX-10,0.15,OZ);
+    aG(new THREE.BoxGeometry(8,0.3,4), platMat2, OX+10,0.15,OZ);
+    // 前廊道
+    aG(new THREE.BoxGeometry(6,0.25,10), platMat2, OX,0.15,OZ-10);
+    // 浮橋（木板，前方通道）
+    for(let i=0;i<10;i++){
+      const bx=OX+(-2+i*.45), bz=OZ-18-i*1.3;
+      aG(new THREE.BoxGeometry(2.8,0.1,1.1), platMat2, bx,0.07,bz);
+    }
+
+    // 主建築 — 大型日式館
+    const colM=mTex(0x1a0c06,woodTex,.55,.05);
+    const roofM=new THREE.MeshStandardMaterial({color:0x0a0805,roughness:.75,metalness:.05});
+    const roofTrimM=new THREE.MeshStandardMaterial({color:0x1a1406,roughness:.65});
+
+    // 8根主柱
+    [[-5.5,-5],[5.5,-5],[-5.5,0],[5.5,0],[-5.5,5],[5.5,5],[-3,5],[3,5]].forEach(([dx,dz])=>{
+      aG(new THREE.CylinderGeometry(.15,.19,4.2,10), colM, OX+dx,2.2,OZ+dz);
+      // 柱礎石
+      aG(new THREE.CylinderGeometry(.22,.26,.2,8),
+        new THREE.MeshStandardMaterial({map:stoneTex,color:0x4a4855,roughness:.9}),
+        OX+dx,0.1,OZ+dz);
+    });
+
+    // 大屋頂（多層，翹簷）
+    aG(new THREE.BoxGeometry(14.5,.25,13), roofM, OX,4.32,OZ);
+    aG(new THREE.BoxGeometry(12,.22,10.5), roofM, OX,5.5,OZ);
+    aG(new THREE.BoxGeometry(9,.18,7.5), roofM, OX,6.4,OZ);
+    aG(new THREE.BoxGeometry(6,.15,4.8), roofM, OX,7.1,OZ);
+    // 屋脊飾
+    aG(new THREE.BoxGeometry(6.5,.14,.18), roofTrimM, OX,7.18,OZ);
+    aG(new THREE.CylinderGeometry(.1,.1,.5,8), roofTrimM, OX-3.2,7.22,OZ);
+    aG(new THREE.CylinderGeometry(.1,.1,.5,8), roofTrimM, OX+3.2,7.22,OZ);
+    // 翹簷裝飾球
+    [[-7.2,-6.4],[-7.2,6.4],[7.2,-6.4],[7.2,6.4]].forEach(([dx,dz])=>{
+      aG(new THREE.SphereGeometry(.18,8,6),
+        new THREE.MeshStandardMaterial({color:0xccaa44,emissive:0xaa8822,emissiveIntensity:1}),
+        OX+dx,4.38,OZ+dz);
+    });
+
+    // 內部地板（可見）
+    aG(new THREE.BoxGeometry(15,0.08,12.5), mTex(0x3a1c08,floorTex,.6,.15), OX,0.28,OZ);
+    // 室內敷居（框架）
+    const sillM=mTex(0x2a1006,woodTex,.6);
+    aG(new THREE.BoxGeometry(13,.12,.12), sillM, OX,0.34,OZ-5.8);
+    aG(new THREE.BoxGeometry(13,.12,.12), sillM, OX,0.34,OZ+5.8);
+
+    // 障子（紙拉門，半透明）
+    const shojiM=new THREE.MeshStandardMaterial({
+      map:shojiTex, color:0xf5eedc, emissive:0xddcc88, emissiveIntensity:.6,
+      transparent:true, opacity:.55, side:THREE.DoubleSide
+    });
+    // 左右側障子
+    for(let p=0;p<3;p++){
+      const pz=OZ-4+p*4;
+      aG(new THREE.BoxGeometry(.06,2.8,3.6), shojiM, OX-6.8,1.8,pz);
+      aG(new THREE.BoxGeometry(.06,2.8,3.6), shojiM, OX+6.8,1.8,pz);
+    }
+
+    // 石燈籠（大型，6個）
+    const stoneLanMat=new THREE.MeshStandardMaterial({map:stoneTex,color:0x4a4855,roughness:.9});
+    const lanternGlow=new THREE.MeshStandardMaterial({color:0xffee88,emissive:0xff9900,emissiveIntensity:5,transparent:true,opacity:.95});
+    [[-9,-8],[9,-8],[-9,0],[9,0],[-9,8],[9,8]].forEach(([dx,dz],i)=>{
+      aG(new THREE.CylinderGeometry(.3,.38,1.6,8), stoneLanMat, OX+dx,.8,OZ+dz);
+      aG(new THREE.BoxGeometry(.75,.6,.75), stoneLanMat, OX+dx,1.9,OZ+dz);
+      aG(new THREE.BoxGeometry(1.0,.15,1.0), stoneLanMat, OX+dx,2.22,OZ+dz);
+      aG(new THREE.BoxGeometry(.65,.45,.65), stoneLanMat, OX+dx,1.6,OZ+dz);
+      // 火燈
+      aG(new THREE.BoxGeometry(.55,.38,.55), lanternGlow, OX+dx,1.65,OZ+dz);
+      const pl=new THREE.PointLight(0xff9944,2.2,10); pl.position.set(OX+dx,2,OZ+dz); g1.add(pl);
+    });
+
+    // 懸掛提燈（廊道）
+    const tLanMat=new THREE.MeshStandardMaterial({color:0xffcc44,emissive:0xff8800,emissiveIntensity:3,transparent:true,opacity:.92});
+    const lanCapM=new THREE.MeshStandardMaterial({color:0x221100,roughness:.8});
+    [OX-10,OX-3,OX+3,OX+10].forEach(lx=>{
+      [-8,8].forEach(lz=>{
+        aG(new THREE.CylinderGeometry(.25,.18,.65,12), tLanMat, lx,2.8,OZ+lz);
+        aG(new THREE.SphereGeometry(.2,8,6), lanCapM, lx,3.15,OZ+lz);
+        aG(new THREE.SphereGeometry(.17,8,6), lanCapM, lx,2.42,OZ+lz);
+        aG(new THREE.CylinderGeometry(.03,.03,.35,6), new THREE.MeshStandardMaterial({color:0x443322}), lx,3.35,OZ+lz);
+      });
+    });
+
+    // 桃花樹（多叢，更大）
+    const blmA=new THREE.MeshStandardMaterial({color:0xffbbcc,emissive:0xff99aa,emissiveIntensity:.85,transparent:true,opacity:.88});
+    const blmB=new THREE.MeshStandardMaterial({color:0xffddee,emissive:0xffbbcc,emissiveIntensity:.6,transparent:true,opacity:.78});
+    const trunkM2=new THREE.MeshStandardMaterial({map:woodTex,color:0x2a1006,roughness:.92});
+    [[-14,4],[14,-4],[-12,-10],[12,8],[-6,-14],[6,14],[-14,-4],[14,4]].forEach(([dx,dz],i)=>{
+      const h=3.5+i*.3;
+      aG(new THREE.CylinderGeometry(.12,.2,h,8), trunkM2, OX+dx,h/2,OZ+dz);
+      const bMat=i%2===0?blmA:blmB;
+      aG(new THREE.SphereGeometry(1.8+i*.1,9,8), bMat, OX+dx,h+1.5,OZ+dz);
+      aG(new THREE.SphereGeometry(1.2,8,7), bMat, OX+dx+1.2,h+.8,OZ+dz+.6);
+      aG(new THREE.SphereGeometry(1.0,8,7), bMat, OX+dx-.8,h+.5,OZ+dz-.8);
+    });
+
+    // 巨大滿月
+    aG(new THREE.SphereGeometry(5,28,20),
+      new THREE.MeshStandardMaterial({color:0xf8f0d8,emissive:0xeeddaa,emissiveIntensity:2.2}),
+      OX-10,26,OZ-22);
+    // 月暈光
+    aG(new THREE.SphereGeometry(6.5,16,12),
+      new THREE.MeshStandardMaterial({color:0xffeebb,emissive:0xddaa44,emissiveIntensity:.8,transparent:true,opacity:.18,side:THREE.BackSide}),
+      OX-10,26,OZ-22);
+
+    // 錦鯉光魚（水中游動，InstancedMesh）
+    const koiInst=new THREE.InstancedMesh(
+      new THREE.SphereGeometry(.3,8,6),
+      new THREE.MeshStandardMaterial({color:0xff6633,emissive:0xff3300,emissiveIntensity:2.8,transparent:true,opacity:.82}),
+      16);
+    koiInst.frustumCulled=false; g1.add(koiInst);
+    const koiData=[];
+    for(let i=0;i<16;i++){
+      koiData.push({ox:OX+(Math.random()-0.5)*30, oy:.18, oz:OZ+(Math.random()-0.5)*30, phase:Math.random()*6.28, spd:.4+Math.random()*.3, col:i%4<2?0xff6633:0xffffff});
+    }
+    const koiCol=new THREE.Color();
+    koiData.forEach((k,i)=>{ koiCol.set(k.col); koiInst.setColorAt(i,koiCol); });
+    koiInst.instanceColor.needsUpdate=true;
+    // 存到外部更新列表
+    scene.userData.koiInst=koiInst; scene.userData.koiData=koiData;
+
+    // 場景燈光
+    const ml1=new THREE.PointLight(0x88ccff,3.5,50); ml1.position.set(OX,8,OZ); g1.add(ml1);
+    const ml2=new THREE.PointLight(0xff9944,2.2,30); ml2.position.set(OX+8,3,OZ-8); g1.add(ml2);
+    const ml3=new THREE.PointLight(0x4488ff,1.5,35); ml3.position.set(OX-8,2,OZ+8); g1.add(ml3);
+    const ml4=new THREE.PointLight(0xffeecc,1.8,40); ml4.position.set(OX,12,OZ-15); g1.add(ml4);
+
+    // 霧氣平面（花瓣/霞）
+    const hazeMat=new THREE.MeshStandardMaterial({color:0xccddff,emissive:0x6688aa,emissiveIntensity:.4,transparent:true,opacity:.08,side:THREE.DoubleSide});
+    aG(new THREE.PlaneGeometry(30,3), hazeMat, OX,1.8,OZ-10, 1,1,1, 0,Math.PI*.1,0);
+    aG(new THREE.PlaneGeometry(25,2.5), hazeMat, OX,1.2,OZ+12, 1,1,1, 0,-Math.PI*.1,0);
+
+    g1.visible=false;
+  }
+
+  // ══════════════════════════════════════════════════
+  //  傳送場景 2：月社鳥居 (MOON SHRINE) ★ v11 大幅升級
+  //  位置 (0, 0, -200)  完整神社建築群
+  // ══════════════════════════════════════════════════
+  {
+    const g2=new THREE.Group(); scene.add(g2); sceneGroups[2]=g2;
+    const OX=0, OZ=-200;
+    function aG(geo,mat,x,y,z,sx,sy,sz,rx,ry,rz){
+      const m=new THREE.Mesh(geo,mat);
+      m.position.set(x,y,z);
+      if(sx!==undefined) m.scale.set(sx,sy,sz);
+      if(rx!==undefined) m.rotation.set(rx,ry,rz);
+      g2.add(m); return m;
+    }
+
+    // ── 材質 ─────────────────────────────────────────
+    const toriiM=new THREE.MeshStandardMaterial({map:lacquerTex,color:0xcc1100,roughness:.35,metalness:.06,emissive:0x550800,emissiveIntensity:.45});
+    const stoneM=new THREE.MeshStandardMaterial({map:stoneTex,color:0x3a3844,roughness:.88});
+    const darkStoneM=new THREE.MeshStandardMaterial({map:stoneTex,color:0x252330,roughness:.92});
+    const woodShineM=mTex(0x1e0e06,woodTex,.55,.08);
+    const woodDkM2=mTex(0x120804,woodTex,.7,.04);
+    const roofDarkM=new THREE.MeshStandardMaterial({color:0x08060a,roughness:.78,metalness:.06});
+    const roofM2=new THREE.MeshStandardMaterial({color:0x10080c,roughness:.72});
+    const goldM2=new THREE.MeshStandardMaterial({color:0xddaa33,emissive:0xbb8800,emissiveIntensity:1.8,roughness:.3});
+    const whiteLanM=new THREE.MeshStandardMaterial({color:0xffeedd,emissive:0xff9900,emissiveIntensity:4.0,transparent:true,opacity:.95});
+    const lanCapDkM=new THREE.MeshStandardMaterial({color:0x180800,roughness:.9});
+    const ropeM=new THREE.MeshStandardMaterial({color:0xeedd88,roughness:.95});
+    const kmM=new THREE.MeshStandardMaterial({color:0xddddcc,roughness:.5});
+
+    // 専用プロジェクションスクリーン用テクスチャ
+    const shrineScreenTex=makeCanvasTex(256,512,(ctx,W,H)=>{
+      // 深藍背景
+      const bg=ctx.createLinearGradient(0,0,0,H);
+      bg.addColorStop(0,'#000a1e'); bg.addColorStop(1,'#001230');
+      ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+      // 頂部金色裝飾線
+      ctx.strokeStyle='rgba(220,180,60,0.9)'; ctx.lineWidth=3;
+      ctx.strokeRect(8,8,W-16,H-16);
+      ctx.strokeRect(14,14,W-28,H-28);
+      // 大型日文字
+      ctx.font='bold 72px serif';
+      ctx.textAlign='center';
+      ctx.fillStyle='rgba(255,200,100,0.92)';
+      ctx.fillText('月', W/2, 105);
+      ctx.fillStyle='rgba(255,160,220,0.88)';
+      ctx.fillText('讀', W/2, 190);
+      // 霓虹分隔線
+      ctx.strokeStyle='rgba(180,60,255,0.7)'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(20,215); ctx.lineTo(W-20,215); ctx.stroke();
+      // 動態橫幅文字
+      ctx.font='16px monospace'; ctx.fillStyle='rgba(100,220,255,0.85)';
+      ctx.fillText('TSUKUYOMI', W/2, 255);
+      ctx.fillText('月讀計畫', W/2, 285);
+      // 底部粒子圖案
+      for(let i=0;i<30;i++){
+        const px2=20+Math.random()*(W-40), py=310+Math.random()*170;
+        const r2=1+Math.random()*3;
+        ctx.fillStyle=`rgba(${Math.floor(100+Math.random()*155)},${Math.floor(50+Math.random()*100)},255,${0.3+Math.random()*0.5})`;
+        ctx.beginPath(); ctx.arc(px2,py,r2,0,Math.PI*2); ctx.fill();
+      }
+      // 底部標語
+      ctx.font='14px monospace';
+      ctx.fillStyle='rgba(200,150,255,0.7)';
+      ctx.fillText('✦ VIRTUAL SPACE ✦', W/2, 490);
+    });
+
+    // ── 廣場石板地面（超大）──────────────────────────
+    aG(new THREE.PlaneGeometry(80,90), darkStoneM, OX,0.01,OZ, 1,1,1, -Math.PI/2,0,0);
+    // 石板參道（帶交錯縫隙，更長更寬）
+    for(let i=-24;i<=24;i+=2){
+      const isCenter=Math.abs(i)%4===2;
+      aG(new THREE.BoxGeometry(4.2,.09,1.8), stoneM, OX,0.055,OZ+i+(isCenter?.06:0));
+    }
+    // 参道兩側黑石邊框
+    [-2.5,2.5].forEach(ox=>{
+      aG(new THREE.BoxGeometry(.28,.06,50), new THREE.MeshStandardMaterial({color:0x1a1820,roughness:.9}), OX+ox,0.04,OZ-1);
+    });
+    // 廟前石庭（本殿前廣場）
+    aG(new THREE.PlaneGeometry(28,18), new THREE.MeshStandardMaterial({map:stoneTex,color:0x2c2a38,roughness:.9}),
+      OX,0.02,OZ-15, 1,1,1, -Math.PI/2,0,0);
+
+    // ── 回廊外牆（完整神社外垣）─────────────────────
+    // 廣場圍牆（低矮石垣）
+    const wallM=mTex(0x2a2835,stoneTex,.9);
+    // 左右外牆
+    [-28,28].forEach(ox=>{
+      for(let i=0;i<9;i++){
+        aG(new THREE.BoxGeometry(.45,1.4,8.5), wallM, OX+ox,.7,OZ-18+i*8.5);
+        // 牆帽石
+        aG(new THREE.BoxGeometry(.65,.2,8.6), stoneM, OX+ox,1.5,OZ-18+i*8.5);
+      }
+    });
+    // 前後外牆（有大門缺口）
+    [-4,4].forEach(oz=>{
+      [-16,-6].forEach(ox=>{ aG(new THREE.BoxGeometry(10,.45,8),...[new THREE.MeshStandardMaterial({color:0x22202c,roughness:.9})],OX+ox,0.22,OZ+oz); }); // low stone
+    });
+
+    // ── 隨神門（中間大門）────────────────────────────
+    const monM=mTex(0x0e0a06,woodTex,.7,.04);
+    const gatez=OZ+3;
+    // 4根大柱
+    [-3.5,3.5].forEach(ox=>{
+      aG(new THREE.CylinderGeometry(.18,.24,5.5,10), monM, OX+ox,2.75,gatez);
+      // 柱礎石
+      aG(new THREE.CylinderGeometry(.28,.32,.2,8), stoneM, OX+ox,.1,gatez);
+    });
+    // 門橫梁
+    aG(new THREE.BoxGeometry(8.5,.3,.28), toriiM, OX,5.2,gatez);
+    aG(new THREE.BoxGeometry(7.5,.22,.22), toriiM, OX,4.6,gatez);
+    // 門屋頂
+    aG(new THREE.BoxGeometry(9.2,.2,.7), roofDarkM, OX,5.55,gatez);
+    aG(new THREE.BoxGeometry(8,.18,.5), roofDarkM, OX,6.2,gatez);
+    // 門扉（扉板）
+    [-1.5,1.5].forEach(ox=>{
+      aG(new THREE.BoxGeometry(2.8,.05,4.8), woodShineM, OX+ox,2.4,gatez, 1,1,1, Math.PI/2,0,0);
+    });
+    // 注連縄（shimenawa - sacred rope）
+    aG(new THREE.CylinderGeometry(.055,.055,8,8,.1,12,1), ropeM, OX,5.05,gatez, 1,1,1, 0,0,Math.PI/2);
+    // 紙垂（zigzag paper decorations）
+    for(let i=0;i<5;i++){
+      aG(new THREE.BoxGeometry(.08,.45,.02),
+        new THREE.MeshStandardMaterial({color:0xf5f0dc,roughness:.98}),
+        OX-3.6+i*1.8,4.7,gatez);
+    }
+
+    // ── 三之大鳥居 ───────────────────────────────────
+    // 1st torii (外側，最大)
+    const t1h=14, t1r=6.2;
+    [OX-t1r,OX+t1r].forEach(px=>{
+      aG(new THREE.CylinderGeometry(.42,.56,t1h,12), toriiM, px,t1h/2,OZ+22);
+      // 斜撑（補強）
+      aG(new THREE.CylinderGeometry(.1,.12,2,8), toriiM, px+(px>0?-.5:.5),t1h*.25,OZ+22, 1,1,1, 0,0,px>0?-0.15:0.15);
+    });
+    aG(new THREE.BoxGeometry(15,.6,.75), toriiM, OX,t1h+.3,OZ+22);
+    aG(new THREE.BoxGeometry(13.5,.35,.55), toriiM, OX,t1h-.85,OZ+22);
+    // 笠木反り（上梁翹起裝飾）
+    aG(new THREE.BoxGeometry(15.5,.15,.35), new THREE.MeshStandardMaterial({color:0xddddcc,roughness:.4}), OX,t1h+.65,OZ+22);
+    // 吊燈
+    aG(new THREE.CylinderGeometry(.38,.3,1.1,14), whiteLanM, OX,t1h-.7,OZ+22);
+    aG(new THREE.SphereGeometry(.3,10,8), lanCapDkM, OX,t1h+.05,OZ+22);
+    aG(new THREE.SphereGeometry(.26,10,8), lanCapDkM, OX,t1h-1.3,OZ+22);
+    // 注連縄
+    aG(new THREE.CylinderGeometry(.045,.045,13.5,8,.1,12,1), ropeM, OX,t1h-.65,OZ+22, 1,1,1, 0,0,Math.PI/2);
+    for(let i=0;i<6;i++){
+      aG(new THREE.BoxGeometry(.07,.5,.02), new THREE.MeshStandardMaterial({color:0xf0ecd8,roughness:.98}), OX-5.5+i*2.2,t1h-.95,OZ+22);
+    }
+    // 鳥居扁額（額板）
+    aG(new THREE.BoxGeometry(5,.9,.08),
+      new THREE.MeshStandardMaterial({color:0x1a0a04,roughness:.6}), OX,t1h-.3,OZ+22-.38);
+    // 燈光
+    const t1l=new THREE.PointLight(0xff9944,3.0,22); t1l.position.set(OX,t1h-1,OZ+22); g2.add(t1l);
+
+    // 2nd torii（中）
+    const t2h=10.5, t2r=4.5;
+    [OX-t2r,OX+t2r].forEach(px=>{
+      aG(new THREE.CylinderGeometry(.3,.42,t2h,10), toriiM, px,t2h/2,OZ+12);
+    });
+    aG(new THREE.BoxGeometry(11,.5,.62), toriiM, OX,t2h+.25,OZ+12);
+    aG(new THREE.BoxGeometry(9.8,.28,.45), toriiM, OX,t2h-.75,OZ+12);
+    aG(new THREE.BoxGeometry(11.5,.14,.3), new THREE.MeshStandardMaterial({color:0xddddcc,roughness:.4}), OX,t2h+.56,OZ+12);
+    aG(new THREE.CylinderGeometry(.3,.24,.92,14), whiteLanM, OX,t2h-.65,OZ+12);
+    const t2l=new THREE.PointLight(0xff9944,2.2,16); t2l.position.set(OX,t2h-1,OZ+12); g2.add(t2l);
+
+    // 3rd torii（内側最小）
+    const t3h=8.2, t3r=3.2;
+    [OX-t3r,OX+t3r].forEach(px=>{
+      aG(new THREE.CylinderGeometry(.22,.3,t3h,10), toriiM, px,t3h/2,OZ+2);
+    });
+    aG(new THREE.BoxGeometry(8,.4,.5), toriiM, OX,t3h+.2,OZ+2);
+    aG(new THREE.BoxGeometry(7,.24,.36), toriiM, OX,t3h-.65,OZ+2);
+    aG(new THREE.CylinderGeometry(.24,.2,.82,12), whiteLanM, OX,t3h-.55,OZ+2);
+    const t3l=new THREE.PointLight(0xff9944,1.8,12); t3l.position.set(OX,t3h-1,OZ+2); g2.add(t3l);
+
+    // ── 手水舎（左、詳細版）──────────────────────────
+    const temiz_x=OX-14, temiz_z=OZ+10;
+    // 屋根を支える柱
+    [-1.2,1.2].forEach(ox=>{
+      [-1,1].forEach(oz=>{
+        aG(new THREE.CylinderGeometry(.09,.12,2.8,8), woodDkM2, temiz_x+ox,1.4,temiz_z+oz);
+      });
+    });
+    // 屋根
+    aG(new THREE.BoxGeometry(3.4,.15,2.8), roofDarkM, temiz_x,2.92,temiz_z);
+    aG(new THREE.BoxGeometry(3.8,.12,3.2), roofDarkM, temiz_x,3.08,temiz_z);
+    // 石槽
+    aG(new THREE.BoxGeometry(2.2,.9,1.4), stoneM, temiz_x,.45,temiz_z);
+    aG(new THREE.BoxGeometry(1.8,.12,1.0), new THREE.MeshStandardMaterial({color:0x001836,emissive:0x002244,emissiveIntensity:.8,transparent:true,opacity:.88}), temiz_x,.95,temiz_z); // water
+    // 竹の樋
+    aG(new THREE.CylinderGeometry(.04,.04,.6,6), new THREE.MeshStandardMaterial({color:0x4a7a28,roughness:.8}), temiz_x,1.05,temiz_z-.2, 1,1,1, Math.PI/2,0,0);
+    // 灯籠
+    aG(new THREE.CylinderGeometry(.12,.16,.9,8), stoneM, temiz_x-1.8,.45,temiz_z);
+    aG(new THREE.BoxGeometry(.45,.38,.45), stoneM, temiz_x-1.8,1.0,temiz_z);
+    aG(new THREE.BoxGeometry(.55,.12,.55), stoneM, temiz_x-1.8,1.22,temiz_z);
+    aG(new THREE.BoxGeometry(.38,.32,.38), new THREE.MeshStandardMaterial({color:0xffee88,emissive:0xffaa00,emissiveIntensity:4,transparent:true,opacity:.95}), temiz_x-1.8,.98,temiz_z);
+    const twl=new THREE.PointLight(0xff9944,1.4,6); twl.position.set(temiz_x-1.8,1.5,temiz_z); g2.add(twl);
+
+    // ── 社務所（右側）────────────────────────────────
+    const sjaX=OX+18, sjaZ=OZ+8;
+    aG(new THREE.BoxGeometry(9,3.5,5.5), woodShineM, sjaX,1.75,sjaZ);
+    aG(new THREE.BoxGeometry(10,.2,6.5), roofDarkM, sjaX,3.68,sjaZ);
+    aG(new THREE.BoxGeometry(9,.18,5.8), roofDarkM, sjaX,4.6,sjaZ);
+    // 窓
+    [-2,2].forEach(ox=>{
+      aG(new THREE.BoxGeometry(.05,1.1,1.4), new THREE.MeshStandardMaterial({map:shojiTex,emissive:0xddcc88,emissiveIntensity:.7,transparent:true,opacity:.6}), sjaX+ox,1.7,sjaZ-2.78);
+    });
+    // 社務所投影廣告屏（正面）
+    const shrScr=new THREE.Mesh(new THREE.BoxGeometry(2.5,4,.08),
+      new THREE.MeshStandardMaterial({map:shrineScreenTex,emissive:0x3311aa,emissiveIntensity:2.2}));
+    shrScr.position.set(sjaX-5.5,2.5,sjaZ+2.5); shrScr.rotation.y=Math.PI/3; g2.add(shrScr);
+    const ssl=new THREE.PointLight(0x4422ff,2.0,12); ssl.position.set(sjaX-5.5,4,sjaZ+2); g2.add(ssl);
+
+    // ── 鐘楼（左後）──────────────────────────────────
+    const bellX=OX-18, bellZ=OZ-14;
+    // 4本柱
+    [-1.5,1.5].forEach(ox=>{
+      [-1.5,1.5].forEach(oz=>{
+        aG(new THREE.CylinderGeometry(.16,.2,4.2,8), woodDkM2, bellX+ox,2.1,bellZ+oz);
+        aG(new THREE.BoxGeometry(.3,.2,.3), stoneM, bellX+ox,.1,bellZ+oz);
+      });
+    });
+    // 鐘楼屋頂
+    aG(new THREE.BoxGeometry(4.5,.2,4.5), roofDarkM, bellX,4.28,bellZ);
+    aG(new THREE.BoxGeometry(5,.16,5), roofDarkM, bellX,4.48,bellZ);
+    aG(new THREE.BoxGeometry(3.8,.18,3.8), roofDarkM, bellX,5.6,bellZ);
+    // 梵鐘（bell）
+    aG(new THREE.CylinderGeometry(.55,.7,1.3,16), new THREE.MeshStandardMaterial({color:0x4a5a28,roughness:.4,metalness:.65}), bellX,2.8,bellZ);
+    aG(new THREE.CylinderGeometry(.1,.1,.8,8), new THREE.MeshStandardMaterial({color:0x888866,roughness:.5,metalness:.4}), bellX,4.0,bellZ);
+    const blPl=new THREE.PointLight(0xffeeaa,1.2,12); blPl.position.set(bellX,2.5,bellZ); g2.add(blPl);
+
+    // ── 拝殿（worship hall，本殿正前）────────────────
+    const haidenZ=OZ-12;
+    // 石階（3層）
+    [3,2,1].forEach((_,i)=>{
+      aG(new THREE.BoxGeometry(12-i*1.2,.32,5.5-i*.4), stoneM, OX,i*.32+.16,haidenZ+3+i*.7);
+    });
+    // 木製廊道（縁台）
+    aG(new THREE.BoxGeometry(11.5,.2,1.2), woodShineM, OX,.98,haidenZ-3);
+    // 拝殿本体
+    aG(new THREE.BoxGeometry(10,4.8,7.5), woodShineM, OX,3.4,haidenZ);
+    // 拝殿屋頂（多層）
+    aG(new THREE.BoxGeometry(12.5,.28,9.2), roofDarkM, OX,5.88,haidenZ);
+    aG(new THREE.BoxGeometry(10.5,.24,7.8), roofDarkM, OX,7.1,haidenZ);
+    aG(new THREE.BoxGeometry(7.5,.2,5.4), roofDarkM, OX,8.0,haidenZ);
+    aG(new THREE.BoxGeometry(4.5,.16,3.2), roofDarkM, OX,8.7,haidenZ);
+    // 千木
+    [[.4,0],[-.4,0]].forEach(([rx])=>aG(new THREE.BoxGeometry(.1,.1,2.2),kmM,OX,8.88,haidenZ,1,1,1,rx,0,0));
+    // 鰹木
+    for(let i=0;i<5;i++) aG(new THREE.CylinderGeometry(.055,.055,1.3,6),kmM,OX-1.2+i*.6,8.82,haidenZ,1,1,1,0,0,Math.PI/2);
+    // 正面柱（6本）
+    [-4,-2.2,0,2.2,4,0].forEach((ox,idx)=>{
+      if(idx<5){
+        aG(new THREE.CylinderGeometry(.13,.17,4.8,10), woodDkM2, OX+ox,2.4,haidenZ-3.75);
+        aG(new THREE.CylinderGeometry(.19,.22,.16,8), stoneM, OX+ox,.08,haidenZ-3.75);
+      }
+    });
+    // 拝殿霓虹裝飾
+    aG(new THREE.BoxGeometry(9,.07,.07), new THREE.MeshStandardMaterial({color:0xffcc44,emissive:0xffaa00,emissiveIntensity:5}), OX,6.0,haidenZ-4.6);
+    aG(new THREE.BoxGeometry(9,.07,.07), new THREE.MeshStandardMaterial({color:0xff9933,emissive:0xff7700,emissiveIntensity:4}), OX,7.22,haidenZ-4.6);
+    // 拝殿内灯籠
+    const hadl=new THREE.PointLight(0xff9944,3.5,18); hadl.position.set(OX,3,haidenZ); g2.add(hadl);
+    // 賽錢箱（offering box）
+    aG(new THREE.BoxGeometry(1.8,.7,1.0), woodShineM, OX,1.15,haidenZ-3.2);
+    aG(new THREE.BoxGeometry(1.9,.06,1.1), new THREE.MeshStandardMaterial({color:0x332200}), OX,1.52,haidenZ-3.2);
+    // 鈴（bell at entrance）
+    aG(new THREE.CylinderGeometry(.22,.28,.45,14), new THREE.MeshStandardMaterial({color:0xd4a020,roughness:.3,metalness:.7}), OX,5.2,haidenZ-3.78);
+    aG(new THREE.CylinderGeometry(.04,.04,1.5,6), new THREE.MeshStandardMaterial({color:0x443322}), OX,4.45,haidenZ-3.78);
+
+    // 接続廊下（拝殿と本殿をつなぐ回廊）
+    const connZ1=haidenZ+3.75, connZ2=OZ-24+7.5;
+    aG(new THREE.BoxGeometry(4.5,.24,(connZ1-connZ2)), woodShineM, OX,.12,(connZ1+connZ2)/2);
+    aG(new THREE.BoxGeometry(5,.18,(connZ1-connZ2+.5)), roofM2, OX,3.6,(connZ1+connZ2)/2);
+    // 接続廊下の柱
+    for(let k=0;k<4;k++){
+      const kz=connZ2+k*(connZ1-connZ2)/3;
+      [-2,2].forEach(ox=>{ aG(new THREE.CylinderGeometry(.1,.13,3.6,8), woodDkM2, OX+ox,1.8,kz); });
+    }
+
+    // ── 本殿（main sanctuary，一番奥）───────────────
+    const hondenZ=OZ-24;
+    // 石階（4層）
+    [4,3,2,1].forEach((_,i)=>{
+      aG(new THREE.BoxGeometry(14-i*1.5,.32,5-i*.45), stoneM, OX,i*.32+.16,hondenZ+3.5+i*.8);
+    });
+    // 本殿本体（大型）
+    aG(new THREE.BoxGeometry(12,7,10), woodShineM, OX,5.0,hondenZ);
+    // 本殿屋根（五層）
+    aG(new THREE.BoxGeometry(14.5,.32,12), roofDarkM, OX,8.68,hondenZ);
+    aG(new THREE.BoxGeometry(12.5,.28,10.2), roofDarkM, OX,10.2,hondenZ);
+    aG(new THREE.BoxGeometry(10,.24,8.2), roofDarkM, OX,11.5,hondenZ);
+    aG(new THREE.BoxGeometry(7.5,.2,5.8), roofDarkM, OX,12.5,hondenZ);
+    aG(new THREE.BoxGeometry(4.5,.16,3.5), roofDarkM, OX,13.2,hondenZ);
+    // 千木・鰹木
+    [[.45,0],[-.45,0]].forEach(([rx])=>aG(new THREE.BoxGeometry(.12,.12,2.8),kmM,OX,13.4,hondenZ,1,1,1,rx,0,0));
+    for(let i=0;i<7;i++) aG(new THREE.CylinderGeometry(.065,.065,1.6,6),kmM,OX-1.8+i*.6,13.32,hondenZ,1,1,1,0,0,Math.PI/2);
+    // 棟飾り（ridge ornament）
+    aG(new THREE.SphereGeometry(.28,10,8), goldM2, OX,13.56,hondenZ);
+    // 本殿正面柱（8本）
+    [-5,-3.5,-2,0,2,3.5,5,0].slice(0,6).forEach((ox,i)=>{
+      aG(new THREE.CylinderGeometry(.15,.2,6.8,10), woodDkM2, OX+ox,3.4,hondenZ-5.0);
+      aG(new THREE.CylinderGeometry(.22,.26,.2,8), stoneM, OX+ox,.1,hondenZ-5.0);
+    });
+    // 本殿側面柱（6本/側）
+    [-1,1].forEach(side=>{
+      for(let k=0;k<4;k++){
+        aG(new THREE.CylinderGeometry(.15,.18,6.8,10), woodDkM2, OX+side*6,3.4,hondenZ-4+k*2.5);
+      }
+    });
+    // 本殿霓虹金線
+    aG(new THREE.BoxGeometry(11,.08,.08), new THREE.MeshStandardMaterial({color:0xffcc44,emissive:0xffaa00,emissiveIntensity:6}), OX,8.82,hondenZ-5.02);
+    aG(new THREE.BoxGeometry(11,.08,.08), new THREE.MeshStandardMaterial({color:0xff9933,emissive:0xff7700,emissiveIntensity:5}), OX,10.34,hondenZ-5.02);
+    // 本殿灯
+    const honl=new THREE.PointLight(0xff9944,4.0,22); honl.position.set(OX,5,hondenZ-2); g2.add(honl);
+    const honl2=new THREE.PointLight(0x4466ff,2.0,18); honl2.position.set(OX,8,hondenZ); g2.add(honl2);
+
+    // ── 大石燈籠（参道两侧，详細）────────────────────
+    const bigLanternAt=(px,pz,scale=1)=>{
+      const sc=scale;
+      aG(new THREE.CylinderGeometry(.28*sc,.36*sc,1.5*sc,8), stoneM, px,.75*sc,pz);
+      aG(new THREE.BoxGeometry(.7*sc,.55*sc,.7*sc), stoneM, px,1.62*sc,pz);
+      aG(new THREE.BoxGeometry(.9*sc,.14*sc,.9*sc), stoneM, px,1.93*sc,pz);
+      aG(new THREE.BoxGeometry(.6*sc,.4*sc,.6*sc),
+        new THREE.MeshStandardMaterial({color:0xffee88,emissive:0xff9900,emissiveIntensity:5,transparent:true,opacity:.95}),
+        px,1.62*sc,pz);
+      aG(new THREE.BoxGeometry(.72*sc,.12*sc,.72*sc), stoneM, px,2.08*sc,pz);
+      const lpl=new THREE.PointLight(0xff9944,2.0*sc,8*sc); lpl.position.set(px,2*sc,pz); g2.add(lpl);
+    };
+    for(let i=0;i<12;i++){
+      const pz=OZ+20-i*3.8;
+      bigLanternAt(OX-4.2,pz, 1+Math.sin(i*.4)*.08);
+      bigLanternAt(OX+4.2,pz, 1+Math.sin(i*.4+1)*.08);
+    }
+    // 本殿前大石燈籠（より大型）
+    bigLanternAt(OX-7,haidenZ+1, 1.5);
+    bigLanternAt(OX+7,haidenZ+1, 1.5);
+    bigLanternAt(OX-9,hondenZ+2, 1.8);
+    bigLanternAt(OX+9,hondenZ+2, 1.8);
+
+    // ── 投影廣告屏柱（数本，神社境内）─────────────
+    const projTex2=shrineScreenTex;
+    const projM2=new THREE.MeshStandardMaterial({map:projTex2,emissive:0x330088,emissiveIntensity:2.5});
+    [[-15,-8],[15,-10],[-20,-18],[20,-16]].forEach(([dx,dz])=>{
+      aG(new THREE.CylinderGeometry(.12,.16,4.5,8), woodDkM2, OX+dx,2.25,OZ+dz);
+      const scr=new THREE.Mesh(new THREE.BoxGeometry(1.8,3,.08),projM2);
+      scr.position.set(OX+dx,3.2,OZ+dz+.2); g2.add(scr);
+      const sl2=new THREE.PointLight(0x3322ff,1.5,8); sl2.position.set(OX+dx,3.5,OZ+dz+1); g2.add(sl2);
+    });
+
+    // ── 狛犬（護法獅子，左右各一）──────────────────
+    const komaM=stoneM;
+    [OX-5.5,OX+5.5].forEach((px,si)=>{
+      const pz=haidenZ-3.5;
+      aG(new THREE.BoxGeometry(1.3,.8,1.3), komaM, px,.4,pz);
+      // 身体
+      const body=new THREE.Mesh(new THREE.SphereGeometry(.48,10,8), komaM);
+      body.position.set(px,.88,pz); body.scale.set(1,.8,1.3); g2.add(body);
+      // 頭
+      aG(new THREE.SphereGeometry(.35,10,9), komaM, px,1.42,pz+.15);
+      // 耳
+      aG(new THREE.SphereGeometry(.1,7,7), komaM, px+(si===0?.2:-.2),1.62,pz+.1);
+      // 口（角度差別）
+      aG(new THREE.BoxGeometry(.18,.06,.12), komaM, px,1.35,pz+.45, 1,1,1, si===0?.2:-.1,0,0);
+      // 前足
+      aG(new THREE.CylinderGeometry(.1,.13,.5,7), komaM, px-.15,.25,pz+.45, 1,1,1, 0,0,.15);
+      aG(new THREE.CylinderGeometry(.1,.13,.5,7), komaM, px+.15,.25,pz+.45, 1,1,1, 0,0,-.15);
+    });
+
+    // ── 桜の木（詳細・大型）──────────────────────────
+    const blmA=new THREE.MeshStandardMaterial({color:0xffbbcc,emissive:0xff88aa,emissiveIntensity:.95,transparent:true,opacity:.88});
+    const blmB=new THREE.MeshStandardMaterial({color:0xffe0ee,emissive:0xffbbcc,emissiveIntensity:.72,transparent:true,opacity:.82});
+    const blmC=new THREE.MeshStandardMaterial({color:0xffa8c4,emissive:0xff7799,emissiveIntensity:.8,transparent:true,opacity:.85});
+    const trkM2=mTex(0x2a1006,woodTex,.92);
+    [
+      [-18,14,5.5],[-16,4,5.0],[-20,-2,5.8],[-14,-12,4.8],[-22,-8,6.2],[-18,-20,5.5],
+      [18,14,5.5],[16,4,5.0],[20,-2,5.8],[14,-12,4.8],[22,-8,6.2],[18,-20,5.5],
+      // 鐘楼周辺の大型桜
+      [-24,-12,7.0],[24,-14,6.8],[-16,-28,6.2],[16,-28,6.0]
+    ].forEach(([dx,dz,h],i)=>{
+      aG(new THREE.CylinderGeometry(.12,.22,h,8), trkM2, OX+dx,h/2,OZ+dz);
+      const mats=[blmA,blmB,blmC]; const bm=mats[i%3];
+      // 主球
+      aG(new THREE.SphereGeometry(2.2+i*.08,10,8), bm, OX+dx,h+1.8,OZ+dz);
+      // 副球
+      aG(new THREE.SphereGeometry(1.4,9,7), blmA, OX+dx+1.4,h+.8,OZ+dz-.8);
+      aG(new THREE.SphereGeometry(1.2,9,7), blmB, OX+dx-1.0,h+.6,OZ+dz+.6);
+      aG(new THREE.SphereGeometry(1.0,8,7), blmC, OX+dx+.6,h-.2,OZ+dz+1.2);
+    });
+
+    // ── 大満月（背景）────────────────────────────────
+    aG(new THREE.SphereGeometry(6.5,32,22),
+      new THREE.MeshStandardMaterial({color:0xf8f0d8,emissive:0xeeddaa,emissiveIntensity:2.8}),
+      OX+15,35,OZ-55);
+    aG(new THREE.SphereGeometry(9,18,14),
+      new THREE.MeshStandardMaterial({color:0xffeebb,emissive:0xddaa44,emissiveIntensity:.7,transparent:true,opacity:.14,side:THREE.BackSide}),
+      OX+15,35,OZ-55);
+
+    // ── 地面霧氣（低い霞）──────────────────────────
+    const mistyM=new THREE.MeshStandardMaterial({color:0xccddff,emissive:0x6688cc,emissiveIntensity:.3,transparent:true,opacity:.07,side:THREE.DoubleSide});
+    for(let i=0;i<7;i++){
+      aG(new THREE.PlaneGeometry(35+i*4,3+i),mistyM,OX+(i-3)*3,.4+i*.12,OZ-5+i*4,1,1,1,0,i*.28,0);
+    }
+
+    // ── 場景燈光 ─────────────────────────────────────
+    const nl1=new THREE.PointLight(0xff9966,3.5,50); nl1.position.set(OX,12,OZ); g2.add(nl1);
+    const nl2=new THREE.PointLight(0x4466ff,2.0,35); nl2.position.set(OX,5,OZ+15); g2.add(nl2);
+    const nl3=new THREE.PointLight(0xff8844,3.0,30); nl3.position.set(OX,6,OZ-22); g2.add(nl3);
+    const nl4=new THREE.PointLight(0xffeecc,1.5,25); nl4.position.set(OX,4,OZ+5); g2.add(nl4);
+    const nl5=new THREE.PointLight(0x8844ff,1.5,28); nl5.position.set(OX-10,8,OZ-30); g2.add(nl5);
+    const nl6=new THREE.PointLight(0xffa033,2.5,22); nl6.position.set(OX,5,hondenZ+2); g2.add(nl6);
+
+    g2.visible=false;
+  }
+
+  // ══════════════════════════════════════════════════
+  //  傳送場景 3：燈籠迴廊 (LANTERN HALL) — 位置 (-200, 0, 0)
+  //  夜間弧形廊道，紅燈籠密掛，欄杆半開，窗外夜景縱深
+  //  ★ v10: 廊道改為弧形彎曲（參考圖左下角）
+  // ══════════════════════════════════════════════════
+  {
+    const g3=new THREE.Group(); scene.add(g3); sceneGroups[3]=g3;
+    const OX=-200, OZ=0;
+    function aG(geo,mat,x,y,z,sx,sy,sz,rx,ry,rz){
+      const m=new THREE.Mesh(geo,mat);
+      m.position.set(x,y,z);
+      if(sx!==undefined) m.scale.set(sx,sy,sz);
+      if(rx!==undefined) m.rotation.set(rx,ry,rz);
+      g3.add(m); return m;
+    }
+
+    const woodFlrM=mTex(0x3a1c08,floorTex,.55,.1);
+    const woodDkM=mTex(0x1a0c04,woodTex,.7,.04);
+    const ceilM2=mTex(0x0f0804,ceilTex,.8);
+    const stoneBaseM=new THREE.MeshStandardMaterial({map:stoneTex,color:0x3a3844,roughness:.88});
+
+    // ── 弧形廊道參數 ──────────────────────────────────
+    // 廊道沿半徑 R 的圓弧走，弧度從 startAng 到 endAng
+    const ARC_R = 28;           // 弧形半徑
+    const ARC_CX = OX + ARC_R; // 弧心 x（在廊道右側）
+    const ARC_CZ = OZ;          // 弧心 z
+    const startAng = Math.PI;   // 開始角度（廊道從 x=-200 向 +z 延伸）
+    const endAng = Math.PI * 1.55; // 結束角度（廊道向上彎曲約100°）
+    const N_SEG = 22;           // 分段數
+    const CW = 7;               // 廊道寬度
+    const CH = 4.5;             // 廊道高度
+    const SEG_L = ARC_R * (endAng - startAng) / N_SEG; // 每段弧長
+
+    // 弧形廊道生成：逐段放置地板/天花板/柱子/欄杆
+    for(let i = 0; i <= N_SEG; i++){
+      const t = i / N_SEG;
+      const ang = startAng + t * (endAng - startAng);
+      const cx = ARC_CX + Math.cos(ang) * ARC_R;
+      const cz = ARC_CZ + Math.sin(ang) * ARC_R;
+      const tangAng = ang + Math.PI/2; // 切線角（廊道延伸方向）
+
+      if(i < N_SEG){
+        const t2 = (i + 1) / N_SEG;
+        const ang2 = startAng + t2 * (endAng - startAng);
+        const cx2 = ARC_CX + Math.cos(ang2) * ARC_R;
+        const cz2 = ARC_CZ + Math.sin(ang2) * ARC_R;
+        const midX = (cx + cx2) / 2, midZ = (cz + cz2) / 2;
+        const segAng = Math.atan2(cz2 - cz, cx2 - cx);
+
+        // 地板段
+        const floorSeg = new THREE.Mesh(
+          new THREE.BoxGeometry(SEG_L + 0.04, 0.28, CW),
+          woodFlrM
+        );
+        floorSeg.position.set(midX, 0.14, midZ);
+        floorSeg.rotation.y = -segAng;
+        g3.add(floorSeg);
+
+        // 石基台
+        const baseS = new THREE.Mesh(new THREE.BoxGeometry(SEG_L+0.04,0.3,CW+1),stoneBaseM);
+        baseS.position.set(midX,-0.15,midZ);
+        baseS.rotation.y=-segAng;
+        g3.add(baseS);
+
+        // 天花板段
+        const ceilSeg = new THREE.Mesh(new THREE.BoxGeometry(SEG_L+0.04,0.25,CW+0.5),ceilM2);
+        ceilSeg.position.set(midX,CH+0.12,midZ);
+        ceilSeg.rotation.y=-segAng;
+        g3.add(ceilSeg);
+
+        // 屋簷延伸
+        const eaveS = new THREE.Mesh(new THREE.BoxGeometry(SEG_L+0.04,0.14,CW+1.5),ceilM2);
+        eaveS.position.set(midX,CH+0.3,midZ);
+        eaveS.rotation.y=-segAng;
+        g3.add(eaveS);
+
+        // 中央脊樑
+        const ridgeS = new THREE.Mesh(new THREE.BoxGeometry(SEG_L+0.04,0.32,0.32),woodDkM);
+        ridgeS.position.set(midX,CH+0.44,midZ);
+        ridgeS.rotation.y=-segAng;
+        g3.add(ridgeS);
+
+        // 橫樑（兩根）
+        const beam1 = new THREE.Mesh(new THREE.BoxGeometry(CW+0.5,0.18,0.22),woodDkM);
+        beam1.position.set(midX,CH-0.3,midZ);
+        beam1.rotation.y=-segAng+Math.PI/2;
+        g3.add(beam1);
+
+        // 兩側欄杆橫板
+        const perpAng = segAng + Math.PI/2;
+        const rOX = Math.cos(perpAng) * (CW/2 - 0.4);
+        const rOZ = Math.sin(perpAng) * (CW/2 - 0.4);
+        [-1,1].forEach(side=>{
+          const railS = new THREE.Mesh(new THREE.BoxGeometry(SEG_L+0.04,0.06,0.55),woodDkM);
+          railS.position.set(midX + side*rOX, 0.7, midZ + side*rOZ);
+          railS.rotation.y=-segAng;
+          g3.add(railS);
+          const rail2S = new THREE.Mesh(new THREE.BoxGeometry(SEG_L+0.04,0.04,0.14),woodDkM);
+          rail2S.position.set(midX + side*rOX, 1.24, midZ + side*rOZ);
+          rail2S.rotation.y=-segAng;
+          g3.add(rail2S);
+        });
+      }
+
+      // 柱子（每段邊界放一對）
+      const perpAng2 = tangAng + Math.PI/2;
+      const pOX = Math.cos(perpAng2) * (CW/2 - 0.3);
+      const pOZ = Math.sin(perpAng2) * (CW/2 - 0.3);
+      [[-1],[1]].forEach(([side])=>{
+        const col = new THREE.Mesh(new THREE.CylinderGeometry(.2,.25,CH,10),woodDkM);
+        col.position.set(cx + side*pOX, CH/2, cz + side*pOZ);
+        g3.add(col);
+        const base = new THREE.Mesh(new THREE.BoxGeometry(.42,.15,.42),stoneBaseM);
+        base.position.set(cx + side*pOX, 0.075, cz + side*pOZ);
+        g3.add(base);
+      });
+
+      // 燈籠（每段中央掛3個）
+      if(i < N_SEG){
+        const t2=(i+0.5)/N_SEG;
+        const ang2=startAng+t2*(endAng-startAng);
+        const lx=ARC_CX+Math.cos(ang2)*ARC_R;
+        const lz=ARC_CZ+Math.sin(ang2)*ARC_R;
+        const segAng2=ang2+Math.PI/2+Math.PI/2;
+        const perpLan=ang2+Math.PI/2;
+        const bigRedLanM=new THREE.MeshStandardMaterial({
+          color:0xff3300,emissive:0xff1100,emissiveIntensity:3.2,transparent:true,opacity:.92
+        });
+        const lanCapBlk=new THREE.MeshStandardMaterial({color:0x1a0800,roughness:.9});
+        const cordM2=new THREE.MeshStandardMaterial({color:0x443322,roughness:.8});
+        [0, Math.cos(perpLan)*(CW*0.22), Math.cos(perpLan)*(CW*(-0.22))].forEach((ox,li)=>{
+          const oz_off = li===0?0: Math.sin(ang2+Math.PI/2)*(CW*(li===1?0.22:-0.22));
+          const lsc=0.85+li*.06;
+          const lanMesh=new THREE.Mesh(new THREE.CylinderGeometry(.36*lsc,.28*lsc,.9,14),bigRedLanM);
+          lanMesh.position.set(lx+ox,3.55,lz+oz_off); g3.add(lanMesh);
+          const cap1=new THREE.Mesh(new THREE.SphereGeometry(.28*lsc,10,8),lanCapBlk);
+          cap1.position.set(lx+ox,4.08,lz+oz_off); g3.add(cap1);
+          const cap2=new THREE.Mesh(new THREE.SphereGeometry(.24*lsc,10,8),lanCapBlk);
+          cap2.position.set(lx+ox,3.1,lz+oz_off); g3.add(cap2);
+          const cord=new THREE.Mesh(new THREE.CylinderGeometry(.03,.03,.32,6),cordM2);
+          cord.position.set(lx+ox,4.24,lz+oz_off); g3.add(cord);
+          // 燈芯
+          const wick=new THREE.Mesh(new THREE.SphereGeometry(.09,6,5),
+            new THREE.MeshStandardMaterial({color:0xffeecc,emissive:0xffcc44,emissiveIntensity:8}));
+          wick.position.set(lx+ox,3.55,lz+oz_off); g3.add(wick);
+          // 流蘇
+          for(let tf=0;tf<4;tf++){
+            const ta=tf/4*Math.PI*2;
+            const fMesh=new THREE.Mesh(new THREE.CylinderGeometry(.01,.005,.5,4),cordM2);
+            fMesh.position.set(lx+ox+Math.cos(ta)*.1,2.8,lz+oz_off+Math.sin(ta)*.1); g3.add(fMesh);
+          }
+          if(li===0){
+            const lp=new THREE.PointLight(0xff6622,2.2,9); lp.position.set(lx+ox,3.4,lz+oz_off); g3.add(lp);
+          }
+        });
+      }
+    }
+
+    // 廊道兩端障子門
+    const shojiEndM=new THREE.MeshStandardMaterial({
+      map:shojiTex,color:0xf5eedc,emissive:0xddcc88,emissiveIntensity:.9,
+      transparent:true,opacity:.6,side:THREE.DoubleSide
+    });
+    // 入口端（沿弧形切線方向）
+    {
+      const a0=startAng; const a0t=a0+Math.PI/2;
+      const e0x=ARC_CX+Math.cos(a0)*ARC_R, e0z=ARC_CZ+Math.sin(a0)*ARC_R;
+      const shoji0=new THREE.Mesh(new THREE.BoxGeometry(CW+.5,3.8,.1),shojiEndM);
+      shoji0.position.set(e0x,2.2,e0z); shoji0.rotation.y=-a0t; g3.add(shoji0);
+    }
+    // 出口端
+    {
+      const a1=endAng; const a1t=a1+Math.PI/2;
+      const e1x=ARC_CX+Math.cos(a1)*ARC_R, e1z=ARC_CZ+Math.sin(a1)*ARC_R;
+      const shoji1=new THREE.Mesh(new THREE.BoxGeometry(CW+.5,3.8,.1),shojiEndM);
+      shoji1.position.set(e1x,2.2,e1z); shoji1.rotation.y=-a1t; g3.add(shoji1);
+    }
+
+    // 廊道兩側窗外建築剪影（弧形外側）
+    const silM=new THREE.MeshStandardMaterial({color:0x080410,roughness:1});
+    const neonWin=new THREE.MeshStandardMaterial({color:0xff6622,emissive:0xff4400,emissiveIntensity:3,transparent:true,opacity:.8});
+    for(let i=0;i<16;i++){
+      const t3=i/16;
+      const ang3=startAng+t3*(endAng-startAng);
+      const bx=ARC_CX+Math.cos(ang3)*(ARC_R+7);
+      const bz=ARC_CZ+Math.sin(ang3)*(ARC_R+7);
+      const bh=4+((i*7+3)%9);
+      const bMesh=new THREE.Mesh(new THREE.BoxGeometry(3,bh,3.5),silM);
+      bMesh.position.set(bx,bh/2,bz); bMesh.rotation.y=-ang3; g3.add(bMesh);
+      if(i%3===0){
+        const nMesh=new THREE.Mesh(new THREE.BoxGeometry(.08,1.2,1.4),neonWin);
+        nMesh.position.set(bx,bh*.6,bz); g3.add(nMesh);
+      }
+      // 廊道內側（弧心一側）建築
+      const bxi=ARC_CX+Math.cos(ang3)*(ARC_R-CW/2-4);
+      const bzi=ARC_CZ+Math.sin(ang3)*(ARC_R-CW/2-4);
+      const bhi=5+((i*5+2)%8);
+      const biMesh=new THREE.Mesh(new THREE.BoxGeometry(3.5,bhi,4),silM);
+      biMesh.position.set(bxi,bhi/2,bzi); biMesh.rotation.y=-ang3; g3.add(biMesh);
+    }
+
+    // 地面反光水幕
+    const corrWat=makeWaterMat(0x140c04,0x241808,0.3);
+    waterMats.push(corrWat);
+    // 簡單平面反光放在廊道中心
+    const cMidAng=(startAng+endAng)/2;
+    const cMidX=ARC_CX+Math.cos(cMidAng)*ARC_R;
+    const cMidZ=ARC_CZ+Math.sin(cMidAng)*ARC_R;
+    const arcLen=ARC_R*(endAng-startAng);
+    aG(new THREE.PlaneGeometry(arcLen,CW-1),corrWat,cMidX,0.15,cMidZ,1,1,1,-Math.PI/2,-(cMidAng+Math.PI/2),0);
+
+    // 霞/霧平面（奥行き感）
+    const hazeLanM=new THREE.MeshStandardMaterial({color:0xff8844,emissive:0xff4400,emissiveIntensity:.3,transparent:true,opacity:.06,side:THREE.DoubleSide});
+    for(let i=0;i<5;i++){
+      const t4=i/5;
+      const ang4=startAng+t4*(endAng-startAng);
+      const hx=ARC_CX+Math.cos(ang4)*ARC_R;
+      const hz2=ARC_CZ+Math.sin(ang4)*ARC_R;
+      const hazePlane=new THREE.Mesh(new THREE.PlaneGeometry(6,4),hazeLanM);
+      hazePlane.position.set(hx,2,hz2); hazePlane.rotation.y=-ang4; g3.add(hazePlane);
+    }
+
+    // ── 柱上投影廣告屏（每隔3根柱子放一個）──────────
+    const projTexLan=makeCanvasTex(128,256,(ctx,W,H)=>{
+      ctx.fillStyle='#000814'; ctx.fillRect(0,0,W,H);
+      ctx.strokeStyle='rgba(255,100,40,0.8)'; ctx.lineWidth=2;
+      ctx.strokeRect(4,4,W-8,H-8);
+      ctx.font='bold 36px serif'; ctx.textAlign='center'; ctx.fillStyle='rgba(255,200,80,0.95)';
+      ctx.fillText('月', W/2, 58); ctx.fillStyle='rgba(255,80,20,0.9)'; ctx.fillText('讀', W/2, 110);
+      ctx.strokeStyle='rgba(255,80,20,0.6)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(10,125); ctx.lineTo(W-10,125); ctx.stroke();
+      ctx.font='10px monospace'; ctx.fillStyle='rgba(255,160,80,0.85)';
+      ['TSUKUYOMI','v11'].forEach((t,i)=>ctx.fillText(t,W/2,148+i*18));
+      ctx.font='8px monospace'; ctx.fillStyle='rgba(200,100,255,0.7)';
+      ctx.fillText('✦ VIRTUAL ✦', W/2, 245);
+    });
+    const projLanM2=new THREE.MeshStandardMaterial({map:projTexLan,emissive:0xff3300,emissiveIntensity:2.2});
+    for(let i=0;i<N_SEG;i+=3){
+      const t5=(i+0.5)/N_SEG;
+      const ang5=startAng+t5*(endAng-startAng);
+      const px5=ARC_CX+Math.cos(ang5)*ARC_R;
+      const pz5=ARC_CZ+Math.sin(ang5)*ARC_R;
+      const segAng5=Math.atan2(Math.sin(ang5+Math.PI/2),Math.cos(ang5+Math.PI/2));
+      const innerOff=CW/2-.25;
+      const scrMesh=new THREE.Mesh(new THREE.BoxGeometry(.08,1.9,1.05),projLanM2);
+      scrMesh.position.set(px5+Math.cos(ang5)*(-innerOff),2.2,pz5+Math.sin(ang5)*(-innerOff));
+      scrMesh.rotation.y=-segAng5+Math.PI/2; g3.add(scrMesh);
+      const psl=new THREE.PointLight(0xff4400,1.2,6); psl.position.set(px5,2.6,pz5); g3.add(psl);
+    }
+
+    // 場景燈光
+    const cl1=new THREE.PointLight(0xff6622,3.5,30); cl1.position.set(OX,3.5,OZ); g3.add(cl1);
+    const cl2=new THREE.PointLight(0xff4400,2.0,20); cl2.position.set(ARC_CX+Math.cos(startAng+0.3)*ARC_R,3.5,ARC_CZ+Math.sin(startAng+0.3)*ARC_R); g3.add(cl2);
+    const cl3=new THREE.PointLight(0xff4400,2.0,20); cl3.position.set(ARC_CX+Math.cos(endAng-0.3)*ARC_R,3.5,ARC_CZ+Math.sin(endAng-0.3)*ARC_R); g3.add(cl3);
+    const cl4=new THREE.PointLight(0xffcc44,1.5,15); cl4.position.set(ARC_CX+Math.cos((startAng+endAng)/2)*ARC_R,3,ARC_CZ+Math.sin((startAng+endAng)/2)*ARC_R); g3.add(cl4);
+
+    g3.visible=false;
+  }
+
+  // ══════════════════════════════════════════════════
+  //  傳送場景 4：緋柱迴廊 (CRIMSON PILLARS) — 位置 (0, 0, 200)
+  //  朱紅大柱廊，弧形排列，大燈籠捲軸，夜海遠眺
+  //  ★ v10: 柱排改為輕微弧形，新增壁板防止天空穿透
+  // ══════════════════════════════════════════════════
+  {
+    const g4=new THREE.Group(); scene.add(g4); sceneGroups[4]=g4;
+    const OX=0, OZ=200;
+    function aG(geo,mat,x,y,z,sx,sy,sz,rx,ry,rz){
+      const m=new THREE.Mesh(geo,mat);
+      m.position.set(x,y,z);
+      if(sx!==undefined) m.scale.set(sx,sy,sz);
+      if(rx!==undefined) m.rotation.set(rx,ry,rz);
+      g4.add(m); return m;
+    }
+
+    const crimM=new THREE.MeshStandardMaterial({map:lacquerTex,color:0xcc1100,roughness:.38,metalness:.04,emissive:0x440000,emissiveIntensity:.45});
+    const woodFlrM4=mTex(0x3a1c08,floorTex,.55,.12);
+    const ceilDk=mTex(0x0d0604,ceilTex,.82);
+    const goldM=new THREE.MeshStandardMaterial({color:0xddaa33,emissive:0xbb8800,emissiveIntensity:1.5,roughness:.35});
+    const stoneM4=new THREE.MeshStandardMaterial({map:stoneTex,color:0x3a3844,roughness:.88});
+
+    // ── 弧形廊道參數 ──────────────────────────────────
+    // 廊道沿輕微弧形排列（弧心在場景外側，讓廊道有溫和彎曲）
+    const ARC2_R = 60;           // 大弧半徑（彎曲感輕微）
+    const ARC2_CX = OX + ARC2_R; // 弧心偏右
+    const ARC2_CZ = OZ;
+    const startAng2 = Math.PI;   // 廊道從北側開始
+    const endAng2 = Math.PI * 1.42; // 彎曲約75度
+    const PIL=16;                // 柱對數
+    const PH=8.5;                // 柱高
+    const PW_HALF=13;            // 廊道半寬（柱到中心）
+
+    const ARC2_SEG_LEN = ARC2_R*(endAng2-startAng2)/PIL;
+
+    // 地板（沿弧形分段）
+    for(let i=0;i<PIL;i++){
+      const t=(i+0.5)/PIL;
+      const ang=startAng2+t*(endAng2-startAng2);
+      const cx=ARC2_CX+Math.cos(ang)*ARC2_R;
+      const cz=ARC2_CZ+Math.sin(ang)*ARC2_R;
+      const segAng=ang+Math.PI/2; // 沿廊道方向角
+      const flrSeg=new THREE.Mesh(new THREE.BoxGeometry(ARC2_SEG_LEN+0.04,0.28,PW_HALF*2+2),woodFlrM4);
+      flrSeg.position.set(cx,0.14,cz); flrSeg.rotation.y=-segAng; g4.add(flrSeg);
+      const baseS=new THREE.Mesh(new THREE.BoxGeometry(ARC2_SEG_LEN+0.04,0.3,PW_HALF*2+4),stoneM4);
+      baseS.position.set(cx,-0.15,cz); baseS.rotation.y=-segAng; g4.add(baseS);
+      // 天花板
+      const ceilS=new THREE.Mesh(new THREE.BoxGeometry(ARC2_SEG_LEN+0.04,0.4,PW_HALF*2+1.5),ceilDk);
+      ceilS.position.set(cx,8.7,cz); ceilS.rotation.y=-segAng; g4.add(ceilS);
+    }
+
+    // 大型朱紅柱（沿弧形兩側排列）
+    for(let i=0;i<=PIL;i++){
+      const t=i/PIL;
+      const ang=startAng2+t*(endAng2-startAng2);
+      const cx=ARC2_CX+Math.cos(ang)*ARC2_R;
+      const cz=ARC2_CZ+Math.sin(ang)*ARC2_R;
+      const perpAng=ang+Math.PI/2;
+      const pOX=Math.cos(perpAng+Math.PI/2)*PW_HALF;
+      const pOZ=Math.sin(perpAng+Math.PI/2)*PW_HALF;
+
+      [-1,1].forEach(side=>{
+        // メイン柱
+        const col=new THREE.Mesh(new THREE.CylinderGeometry(.52,.65,PH,14),crimM);
+        col.position.set(cx+side*pOX,PH/2,cz+side*pOZ); g4.add(col);
+        // 柱礎（金装飾）
+        const cap1=new THREE.Mesh(new THREE.CylinderGeometry(.68,.75,.25,12),goldM);
+        cap1.position.set(cx+side*pOX,0.125,cz+side*pOZ); g4.add(cap1);
+        const cap2=new THREE.Mesh(new THREE.CylinderGeometry(.6,.68,.2,12),goldM);
+        cap2.position.set(cx+side*pOX,PH+0.1,cz+side*pOZ); g4.add(cap2);
+        // 石柱礎
+        const sBase=new THREE.Mesh(new THREE.CylinderGeometry(.75,.85,.3,8),stoneM4);
+        sBase.position.set(cx+side*pOX,-0.15,cz+side*pOZ); g4.add(sBase);
+      });
+
+      // 天井橫梁（大型）
+      if(i<PIL){
+        const t2=(i+0.5)/PIL;
+        const ang2=startAng2+t2*(endAng2-startAng2);
+        const cx2=ARC2_CX+Math.cos(ang2)*ARC2_R;
+        const cz2=ARC2_CZ+Math.sin(ang2)*ARC2_R;
+        const segAng2=ang2+Math.PI/2;
+        const beamW=PW_HALF*2+2;
+        const beam=new THREE.Mesh(new THREE.BoxGeometry(ARC2_SEG_LEN+0.04,.35,beamW+.5),crimM);
+        beam.position.set(cx2,PH+0.15,cz2); beam.rotation.y=-segAng2; g4.add(beam);
+        const beam2=new THREE.Mesh(new THREE.BoxGeometry(ARC2_SEG_LEN+0.04,.18,beamW),crimM);
+        beam2.position.set(cx2,7.8,cz2); beam2.rotation.y=-segAng2; g4.add(beam2);
+        const beam3=new THREE.Mesh(new THREE.BoxGeometry(ARC2_SEG_LEN+0.04,.12,beamW),crimM);
+        beam3.position.set(cx2,6.8,cz2); beam3.rotation.y=-segAng2; g4.add(beam3);
+
+        // ── 側面壁板（防止天空透視）──────────────────
+        // 在兩側柱列外側加薄壁
+        const wallH=PH;
+        [-1,1].forEach(side=>{
+          const wallMesh=new THREE.Mesh(new THREE.BoxGeometry(ARC2_SEG_LEN+0.04,wallH,.22),crimM);
+          wallMesh.position.set(cx2+side*(pOX+0.16),wallH/2,cz2+side*(pOZ+0.16));
+          wallMesh.rotation.y=-segAng2; g4.add(wallMesh);
+          // 壁板上的裝飾格紋
+          const gridM=new THREE.MeshStandardMaterial({color:0xaa0900,emissive:0x330000,emissiveIntensity:.3,roughness:.5});
+          for(let gj=1;gj<=3;gj++){
+            const gMesh=new THREE.Mesh(new THREE.BoxGeometry(ARC2_SEG_LEN*.7,.04,.08),gridM);
+            gMesh.position.set(cx2+side*(pOX+0.2),gj*PH/4,cz2+side*(pOZ+0.2));
+            gMesh.rotation.y=-segAng2; g4.add(gMesh);
+          }
+        });
+      }
+    }
+
+    // ── 大型懸掛燈籠（3列×12行）──
+    const bigLanBodyM=new THREE.MeshStandardMaterial({color:0xffeecc,emissive:0xffcc66,emissiveIntensity:3.0,transparent:true,opacity:.92});
+    const bigLanCapM=new THREE.MeshStandardMaterial({color:0x1a0800,roughness:.88});
+    const scrollBluM=new THREE.MeshStandardMaterial({color:0x2244bb,emissive:0x1133aa,emissiveIntensity:1.2,transparent:true,opacity:.88});
+    const scrollRedM=new THREE.MeshStandardMaterial({color:0xcc1100,emissive:0x880000,emissiveIntensity:1.0,transparent:true,opacity:.88});
+
+    for(let i=0;i<12;i++){
+      const t=(i+0.5)/12;
+      const ang=startAng2+t*(endAng2-startAng2);
+      const lcx=ARC2_CX+Math.cos(ang)*ARC2_R;
+      const lcz=ARC2_CZ+Math.sin(ang)*ARC2_R;
+      const perpAng=ang+Math.PI/2;
+      const segAng=ang+Math.PI/2;
+
+      // 3列燈籠（中央+兩側）
+      [0, 7, -7].forEach((offset,li)=>{
+        const lx=lcx+Math.cos(perpAng+Math.PI/2)*offset;
+        const lz=lcz+Math.sin(perpAng+Math.PI/2)*offset;
+        aG(new THREE.CylinderGeometry(.65,.55,1.7,16), bigLanBodyM, lx,6.8,lz);
+        aG(new THREE.SphereGeometry(.55,12,9), bigLanCapM, lx,7.66,lz);
+        aG(new THREE.SphereGeometry(.48,12,9), bigLanCapM, lx,5.97,lz);
+        aG(new THREE.CylinderGeometry(.025,.025,.45,5), new THREE.MeshStandardMaterial({color:0x443322}), lx,7.92,lz);
+        aG(new THREE.SphereGeometry(.12,7,6),
+          new THREE.MeshStandardMaterial({color:0xfffce0,emissive:0xffee88,emissiveIntensity:10}),
+          lx,6.8,lz);
+        // 捲軸
+        if(li===0 && i%2===0){
+          const sMat=i%4===0?scrollBluM:scrollRedM;
+          const ang_r=segAng;
+          const scroll=new THREE.Mesh(new THREE.BoxGeometry(.85,2.5,.06),sMat);
+          scroll.position.set(lx,5.2,lz); scroll.rotation.y=-ang_r; g4.add(scroll);
+          const r1=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,1,7),goldM);
+          r1.position.set(lx,4.0,lz); g4.add(r1);
+          const r2=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,1,7),goldM);
+          r2.position.set(lx,6.45,lz); g4.add(r2);
+        }
+        // 流蘇
+        for(let tf=0;tf<5;tf++){
+          const ta=tf/5*Math.PI*2;
+          aG(new THREE.CylinderGeometry(.008,.004,.6,4), new THREE.MeshStandardMaterial({color:0xddaa33}),
+            lx+Math.cos(ta)*.12,5.65,lz+Math.sin(ta)*.12);
+        }
+        if(li===0 && i%4===0){
+          const lp=new THREE.PointLight(0xffcc44,2.5,14); lp.position.set(lx,6.5,lz); g4.add(lp);
+        }
+      });
+    }
+
+    // ── 欄干（手摺り）沿弧形 ──
+    const railM=new THREE.MeshStandardMaterial({map:woodTex,color:0x8a6030,roughness:.6});
+    for(let i=0;i<PIL;i++){
+      const t=(i+0.5)/PIL;
+      const ang=startAng2+t*(endAng2-startAng2);
+      const rcx=ARC2_CX+Math.cos(ang)*ARC2_R;
+      const rcz=ARC2_CZ+Math.sin(ang)*ARC2_R;
+      const segAng=ang+Math.PI/2;
+      const perpAng=ang+Math.PI/2;
+      const pOX=Math.cos(perpAng+Math.PI/2)*PW_HALF;
+      const pOZ=Math.sin(perpAng+Math.PI/2)*PW_HALF;
+      [-1,1].forEach(side=>{
+        const rail=new THREE.Mesh(new THREE.BoxGeometry(ARC2_SEG_LEN+0.04,.18,.22),railM);
+        rail.position.set(rcx+side*pOX,.55,rcz+side*pOZ); rail.rotation.y=-segAng; g4.add(rail);
+        // 欄干支柱
+        const rp=new THREE.Mesh(new THREE.CylinderGeometry(.06,.07,.65,7),railM);
+        rp.position.set(rcx+side*pOX,.38,rcz+side*pOZ); g4.add(rp);
+      });
+    }
+
+    // ── 廊道兩端牌坊 ──
+    const endData=[{t:0,ang:startAng2},{t:1,ang:endAng2}];
+    endData.forEach(({t:et,ang:ea})=>{
+      const ecx=ARC2_CX+Math.cos(ea)*ARC2_R;
+      const ecz=ARC2_CZ+Math.sin(ea)*ARC2_R;
+      const esegAng=ea+Math.PI/2;
+      const ep=Math.cos(esegAng+Math.PI/2)*PW_HALF;
+      const epz=Math.sin(esegAng+Math.PI/2)*PW_HALF;
+      const gate1=new THREE.Mesh(new THREE.BoxGeometry(PW_HALF*2+4,.38,.5),crimM);
+      gate1.position.set(ecx,PH+0.25,ecz); gate1.rotation.y=-esegAng; g4.add(gate1);
+      const gate2=new THREE.Mesh(new THREE.BoxGeometry(PW_HALF*2+5,.22,.38),crimM);
+      gate2.position.set(ecx,PH-.55,ecz); gate2.rotation.y=-esegAng; g4.add(gate2);
+    });
+
+    // ── 夜海（廣大動態海面）──
+    const seaMat=makeWaterMat(0x020c18,0x04182e,0.5);
+    waterMats.push(seaMat);
+    aG(new THREE.PlaneGeometry(220,120,40,40), seaMat, OX,0.02,OZ+55, 1,1,1, -Math.PI/2,0,0);
+    aG(new THREE.PlaneGeometry(180,20),
+      new THREE.MeshStandardMaterial({color:0x1a3050,emissive:0x112240,emissiveIntensity:.8,transparent:true,opacity:.35}),
+      OX,.8,OZ+50, 1,1,1, -Math.PI/2,0,0);
+    aG(new THREE.PlaneGeometry(3,25),
+      new THREE.MeshStandardMaterial({color:0xf0e8d0,emissive:0xddcc88,emissiveIntensity:1.2,transparent:true,opacity:.38}),
+      OX,0.06,OZ+55, 1,1,1, -Math.PI/2,0,0);
+
+    // 大月
+    aG(new THREE.SphereGeometry(6,28,22),
+      new THREE.MeshStandardMaterial({color:0xf8f0d8,emissive:0xeeddaa,emissiveIntensity:2.5}),
+      OX,35,OZ+80);
+    aG(new THREE.SphereGeometry(8,16,12),
+      new THREE.MeshStandardMaterial({color:0xffeebb,emissive:0xddaa44,emissiveIntensity:.65,transparent:true,opacity:.14,side:THREE.BackSide}),
+      OX,35,OZ+80);
+
+    // 海面錦鯉（霓虹藍）
+    const seaKoiM=new THREE.MeshStandardMaterial({color:0x44aaff,emissive:0x2266cc,emissiveIntensity:3.5,transparent:true,opacity:.85});
+    [[4,42],[-4,38],[7,48],[-7,44],[1,52],[10,46]].forEach(([fx,fz])=>{
+      aG(new THREE.SphereGeometry(.22,7,5), seaKoiM, OX+fx,0.14,OZ+fz, 2.5,0.45,1);
+    });
+
+    // 遠景島山シルエット
+    const islandM=new THREE.MeshStandardMaterial({color:0x060312,roughness:1});
+    [[-25,2],[-15,4],[15,3],[25,2],[-40,1],[40,1]].forEach(([ix,ih])=>{
+      aG(new THREE.SphereGeometry(ih*3+3,12,8), islandM, OX+ix,ih*1.5-2,OZ+80, 1,0.4,1);
+    });
+
+    // 海面反射霓虹光條
+    for(let r=0;r<6;r++){
+      aG(new THREE.PlaneGeometry(.4,18),
+        new THREE.MeshStandardMaterial({color:0xff8833,emissive:0xff5500,emissiveIntensity:2,transparent:true,opacity:.25}),
+        OX+(r-2.5)*4.5,0.05,OZ+50, 1,1,1, -Math.PI/2,0,0);
+    }
+
+    // 場景燈光
+    for(let i=0;i<5;i++){
+      const t=i/4;
+      const ang=startAng2+t*(endAng2-startAng2);
+      const lcx=ARC2_CX+Math.cos(ang)*ARC2_R;
+      const lcz=ARC2_CZ+Math.sin(ang)*ARC2_R;
+      const pl=new THREE.PointLight(0xffcc44,2.2,18); pl.position.set(lcx,7,lcz); g4.add(pl);
+    }
+    // ── 柱上投影廣告屏（緋柱廊道）────────────────────
+    const projTex4=makeCanvasTex(128,256,(ctx,W,H)=>{
+      ctx.fillStyle='#0a0010'; ctx.fillRect(0,0,W,H);
+      const g4bg=ctx.createLinearGradient(0,0,W,H);
+      g4bg.addColorStop(0,'rgba(200,0,50,0.6)'); g4bg.addColorStop(1,'rgba(100,0,200,0.4)');
+      ctx.fillStyle=g4bg; ctx.fillRect(0,0,W,H);
+      ctx.strokeStyle='rgba(255,50,50,0.9)'; ctx.lineWidth=2;
+      ctx.strokeRect(3,3,W-6,H-6);
+      ctx.font='bold 32px serif'; ctx.textAlign='center';
+      ctx.fillStyle='rgba(255,220,100,0.95)'; ctx.fillText('月', W/2, 55);
+      ctx.fillStyle='rgba(255,80,80,0.9)'; ctx.fillText('讀', W/2, 100);
+      ctx.strokeStyle='rgba(255,50,80,0.5)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(8,115); ctx.lineTo(W-8,115); ctx.stroke();
+      ctx.font='9px monospace'; ctx.fillStyle='rgba(255,180,100,0.85)';
+      ['TSUKUYOMI','★ v11 ★','緋柱迴廊'].forEach((t,i)=>ctx.fillText(t,W/2,135+i*18));
+      // 霓虹粒子
+      for(let i=0;i<25;i++){
+        const c=Math.floor(Math.random()*255);
+        ctx.fillStyle=`rgba(255,${c},0,${0.2+Math.random()*0.6})`;
+        ctx.beginPath(); ctx.arc(8+Math.random()*(W-16),200+Math.random()*50,1+Math.random()*2,0,Math.PI*2); ctx.fill();
+      }
+    });
+    const projM4=new THREE.MeshStandardMaterial({map:projTex4,emissive:0xcc0044,emissiveIntensity:2.5});
+    for(let i=0;i<=PIL;i+=2){
+      const t=i/PIL;
+      const ang=startAng2+t*(endAng2-startAng2);
+      const cx4=ARC2_CX+Math.cos(ang)*ARC2_R;
+      const cz4=ARC2_CZ+Math.sin(ang)*ARC2_R;
+      const perpAng4=ang; // 柱方向角（垂直廊道）
+      // 兩側各一屏
+      [-1,1].forEach(side=>{
+        const offX=Math.cos(perpAng4)*PW_HALF*side;
+        const offZ=Math.sin(perpAng4)*PW_HALF*side;
+        const sc4=new THREE.Mesh(new THREE.BoxGeometry(0.1,3.0,1.8),projM4);
+        sc4.position.set(cx4+offX,4.5,cz4+offZ);
+        sc4.rotation.y=-(ang+Math.PI/2)+Math.PI/2; g4.add(sc4);
+        const pl4=new THREE.PointLight(0xff2244,1.5,8); pl4.position.set(cx4+offX*0.7,5,cz4+offZ*0.7); g4.add(pl4);
+      });
+    }
+
+    const al=new THREE.PointLight(0xff6622,3.5,45); al.position.set(OX,6,OZ); g4.add(al);
+    const al2=new THREE.PointLight(0x4488cc,2.0,40); al2.position.set(OX,3,OZ+25); g4.add(al2);
+
+    g4.visible=false;
+  }
+
+  // ══════════════════════════════════════════════════
+  //  傳送場景 5：海洋劇場 (OCEAN THEATER) — 位置 (300, 0, 0)
+  //  腳下是無盡大海，中央矗立超巨大 YouTube 螢幕
+  // ══════════════════════════════════════════════════
+  {
+    const g5=new THREE.Group(); scene.add(g5); sceneGroups[5]=g5;
+    const OX=300, OZ=0;
+    function aG5(geo,mat,x,y,z,sx,sy,sz,rx,ry,rz){
+      const m=new THREE.Mesh(geo,mat);
+      m.position.set(x,y,z);
+      if(sx!==undefined) m.scale.set(sx,sy,sz);
+      if(rx!==undefined) m.rotation.set(rx,ry,rz);
+      g5.add(m); return m;
+    }
+
+    // ── 海洋劇場專屬天空球（深藍夜空，覆蓋原本的天空 shader）──
+    const oceanSkyMat=new THREE.ShaderMaterial({
+      side:THREE.BackSide, depthWrite:false,
+      uniforms:{uT:{value:0}},
+      vertexShader:`varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+      fragmentShader:`
+        varying vec3 vP; uniform float uT;
+        float h2(vec2 p){p=fract(p*vec2(127.1,311.7));p+=dot(p,p+19.19);return fract(p.x*p.y);}
+        float n2(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);
+          return mix(mix(h2(i),h2(i+vec2(1,0)),u.x),mix(h2(i+vec2(0,1)),h2(i+vec2(1,1)),u.x),u.y);}
+        void main(){
+          vec3 d=normalize(vP);
+          // 深藍漸層天空
+          float hor=clamp(1.-abs(d.y)*1.2,0.,1.);
+          vec3 col=mix(vec3(.006,.012,.04),vec3(.01,.04,.12),smoothstep(.0,.6,d.y));
+          col=mix(col,vec3(.018,.06,.18),smoothstep(.6,1.,d.y));
+          // 地平線微微亮藍
+          col+=vec3(.04,.12,.35)*pow(hor,3.)*.8;
+          col+=vec3(.02,.08,.22)*pow(hor,6.)*.5;
+          // 星星
+          float st=step(.997,h2(floor(d.xz*380.+d.y*190.)));
+          float stB=step(.9994,h2(floor(d.xz*160.)));
+          float tw=.7+.3*sin(uT*2.+h2(floor(d.xz*380.))*6.28);
+          float skyDark=smoothstep(.1,.5,d.y);
+          col+=st*vec3(.8,.9,1.)*tw*skyDark*.7;
+          col+=stB*vec3(1.,1.,1.)*skyDark*1.8;
+          // 大月亮方向（前方偏右上）
+          vec3 moonDir=normalize(vec3(.1,.45,-1.));
+          float moonD=distance(normalize(d),moonDir);
+          col+=vec3(.9,.88,.78)*smoothstep(.055,.0,moonD)*3.;
+          col+=vec3(.4,.42,.35)*smoothstep(.14,.06,moonD)*.7;
+          col+=vec3(.12,.15,.1)*smoothstep(.3,.14,moonD)*.25;
+          col=pow(max(col,vec3(0.)),vec3(.9));
+          gl_FragColor=vec4(col,1.);
+        }`
+    });
+    const oceanSkySphere=new THREE.Mesh(new THREE.SphereGeometry(195,32,16),oceanSkyMat);
+    oceanSkySphere.position.set(OX,0,OZ);
+    oceanSkySphere.renderOrder=-1;
+    g5.add(oceanSkySphere);
+    g5.userData.oceanSkyMat=oceanSkyMat;
+
+    // ── 廣大無盡海面 ──────────────────────────────────
+    // 使用藍色系 shader（深藍+淺藍，對應圖片中那種藍色海洋）
+    // 海洋流動 shader — 自然藍色水面，有方向感的流動波紋
+    const oceanMat=new THREE.ShaderMaterial({
+      transparent:false, side:THREE.FrontSide, depthWrite:true,
+      uniforms:{uT:{value:0}},
+      vertexShader:`varying vec2 vUv; varying vec3 vWorld;
+        void main(){
+          vUv=uv;
+          vec4 wp=modelMatrix*vec4(position,1.);
+          vWorld=wp.xyz;
+          gl_Position=projectionMatrix*viewMatrix*wp;
+        }`,
+      fragmentShader:`
+        varying vec2 vUv; varying vec3 vWorld;
+        uniform float uT;
+        float h(vec2 p){p=fract(p*vec2(127.1,311.7));p+=dot(p,p+19.19);return fract(p.x*p.y);}
+        float n(vec2 p){
+          vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);
+          return mix(mix(h(i),h(i+vec2(1,0)),u.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),u.x),u.y);
+        }
+        float fbm(vec2 p){
+          return n(p)*.5+n(p*2.1+vec2(1.7,9.2))*.25+n(p*4.5+vec2(8.3,2.8))*.125+n(p*9.+vec2(3.1,6.7))*.0625;
+        }
+        void main(){
+          float t=uT;
+          vec2 wuv=vWorld.xz*0.04;
+          float flow1=fbm(wuv*2.+vec2(t*.12,t*.08));
+          float flow2=fbm(wuv*1.6-vec2(t*.09,t*.14)+vec2(3.7,1.2));
+          float flow3=fbm(wuv*3.5+vec2(t*.18,-t*.06)+vec2(9.1,4.3));
+          float wave=flow1*.5+flow2*.35+flow3*.15;
+          vec3 colDeep=vec3(.012,.055,.20);
+          vec3 colMid=vec3(.03,.14,.45);
+          vec3 colShallow=vec3(.08,.30,.70);
+          vec3 col=mix(colDeep,colMid,smoothstep(.2,.55,wave));
+          col=mix(col,colShallow,smoothstep(.5,.78,wave));
+          float foam=smoothstep(.74,.82,wave)*smoothstep(.88,.78,wave);
+          col=mix(col,vec3(.75,.88,1.),foam*.35);
+          float ripple=sin((wuv.x*18.+t*.5)*6.28+flow1*4.)*.5+.5;
+          ripple*=sin((wuv.y*14.-t*.3)*6.28+flow2*3.)*.5+.5;
+          col+=vec3(.05,.12,.25)*ripple*smoothstep(.35,.6,wave)*.4;
+          float moonLine=abs(wuv.x-0.);
+          float moonRefl=exp(-moonLine*moonLine*.8)*(.5+.5*sin(t*.4+wuv.y*2.));
+          col+=vec3(.55,.65,.85)*moonRefl*.25;
+          float spark=step(.996,h(floor(wuv*80.+floor(t*.5)*100.)));
+          col+=spark*vec3(.7,.85,1.)*1.5;
+          float dist=length(vWorld.xz-vec2(300.,0.));
+          float fog=smoothstep(80.,350.,dist);
+          col=mix(col,vec3(.008,.03,.12),fog);
+          gl_FragColor=vec4(col,1.);
+        }`
+    });
+    waterMats.push(oceanMat);
+    aG5(new THREE.PlaneGeometry(800,800,80,80), oceanMat, OX,0.0,OZ, 1,1,1, -Math.PI/2,0,0);
+
+    // 玩家站立的小圓形舞台（懸浮在海面，用發光材質不受全局燈光影響）
+    const platformMat=new THREE.MeshStandardMaterial({
+      color:0x020818, roughness:.15, metalness:.92,
+      emissive:0x0a1840, emissiveIntensity:.6
+    });
+    aG5(new THREE.CylinderGeometry(12,12,.28,64), platformMat, OX,0.08,OZ);
+    // 平台霓虹邊圈
+    const neonRingMat=new THREE.MeshStandardMaterial({color:0x00ccff,emissive:0x00aaff,emissiveIntensity:5,transparent:true,opacity:.9});
+    aG5(new THREE.TorusGeometry(12,.08,6,80), neonRingMat, OX,.15,OZ, 1,1,1, Math.PI/2,0,0);
+    const neonRing2=new THREE.MeshStandardMaterial({color:0xff44aa,emissive:0xff2299,emissiveIntensity:4,transparent:true,opacity:.8});
+    aG5(new THREE.TorusGeometry(9,.05,6,64), neonRing2, OX,.14,OZ, 1,1,1, Math.PI/2,0,0);
+    // 平台地面發光紋（幾條放射線）
+    for(let r=0;r<8;r++){
+      const ang=r/8*Math.PI*2;
+      const lineMat=new THREE.MeshStandardMaterial({color:0x4488ff,emissive:0x2266cc,emissiveIntensity:3,transparent:true,opacity:.6});
+      const lx=Math.cos(ang)*6, lz=Math.sin(ang)*6;
+      aG5(new THREE.BoxGeometry(.06,0.02,12), lineMat, OX+lx*.5,.16,OZ+lz*.5, 1,1,1, 0,ang,0);
+    }
+
+    // ── 超巨大螢幕支撐柱 ──────────────────────────────
+    const oceanScreenZ=-22; // 螢幕距玩家正前方
+    const pillarMat=new THREE.MeshStandardMaterial({color:0x0a0818,roughness:.2,metalness:.95});
+    const pillarNeonMat=new THREE.MeshStandardMaterial({color:0x8844ff,emissive:0x6622dd,emissiveIntensity:4});
+    // 左右兩根主柱
+    [-8,8].forEach(dx=>{
+      aG5(new THREE.CylinderGeometry(.6,.9,18,12), pillarMat, OX+dx,9,OZ+oceanScreenZ);
+      // 柱身霓虹條紋
+      for(let nh=0;nh<5;nh++){
+        aG5(new THREE.TorusGeometry(.65,.04,6,24), pillarNeonMat, OX+dx,2+nh*3.5,OZ+oceanScreenZ, 1,1,1, Math.PI/2,0,0);
+      }
+      // 柱基（海面平台上的固定底座）
+      aG5(new THREE.CylinderGeometry(1.2,1.5,.6,12),
+        new THREE.MeshStandardMaterial({color:0x080614,roughness:.4,metalness:.8}),
+        OX+dx,.3,OZ+oceanScreenZ);
+    });
+    // 頂部橫梁
+    aG5(new THREE.BoxGeometry(18,.6,.6), pillarMat, OX,18,OZ+oceanScreenZ);
+    aG5(new THREE.BoxGeometry(19,.15,.15), pillarNeonMat, OX,18.4,OZ+oceanScreenZ);
+    aG5(new THREE.BoxGeometry(19,.15,.15), pillarNeonMat, OX,17.55,OZ+oceanScreenZ);
+
+    // ── 超巨大螢幕框架 ────────────────────────────────
+    // 螢幕尺寸：寬14 × 高8（比主場景大得多）
+    const oceanSW=14, oceanSH=8;
+    const oceanScreenY=10; // 螢幕中心高度
+
+    const oFrameMat=new THREE.MeshStandardMaterial({color:0x060412,roughness:.2,metalness:.95});
+    aG5(new THREE.BoxGeometry(oceanSW+.6,oceanSH+.6,.28), oFrameMat, OX,oceanScreenY,OZ+oceanScreenZ);
+
+    // 螢幕霓虹框邊（橘紅色，發光強烈）
+    const oNeonFrameMat=new THREE.MeshStandardMaterial({color:0xff4400,emissive:0xff3300,emissiveIntensity:6});
+    // 左右
+    aG5(new THREE.BoxGeometry(.18,oceanSH+.6,.15), oNeonFrameMat, OX-(oceanSW/2+.32),oceanScreenY,OZ+oceanScreenZ);
+    aG5(new THREE.BoxGeometry(.18,oceanSH+.6,.15), oNeonFrameMat, OX+(oceanSW/2+.32),oceanScreenY,OZ+oceanScreenZ);
+    // 上下
+    aG5(new THREE.BoxGeometry(oceanSW+.8,.18,.15), oNeonFrameMat, OX,oceanScreenY+(oceanSH/2+.32),OZ+oceanScreenZ);
+    aG5(new THREE.BoxGeometry(oceanSW+.8,.18,.15), oNeonFrameMat, OX,oceanScreenY-(oceanSH/2+.32),OZ+oceanScreenZ);
+    // 外圈第二條框（藍色）
+    const oNeonFrame2Mat=new THREE.MeshStandardMaterial({color:0x0088ff,emissive:0x0066cc,emissiveIntensity:4,transparent:true,opacity:.8});
+    aG5(new THREE.BoxGeometry(.1,oceanSH+1.2,.12), oNeonFrame2Mat, OX-(oceanSW/2+.7),oceanScreenY,OZ+oceanScreenZ);
+    aG5(new THREE.BoxGeometry(.1,oceanSH+1.2,.12), oNeonFrame2Mat, OX+(oceanSW/2+.7),oceanScreenY,OZ+oceanScreenZ);
+    aG5(new THREE.BoxGeometry(oceanSW+1.6,.1,.12), oNeonFrame2Mat, OX,oceanScreenY+(oceanSH/2+.65),OZ+oceanScreenZ);
+    aG5(new THREE.BoxGeometry(oceanSW+1.6,.1,.12), oNeonFrame2Mat, OX,oceanScreenY-(oceanSH/2+.65),OZ+oceanScreenZ);
+
+    // 螢幕面板（待機黑幕）
+    const oceanScreenMesh=aG5(new THREE.BoxGeometry(oceanSW,oceanSH,.06),
+      new THREE.MeshStandardMaterial({color:0x080814,emissive:0x111133,emissiveIntensity:1.2}),
+      OX,oceanScreenY,OZ+oceanScreenZ-.15);
+
+    // 螢幕光暈
+    const oceanScreenGlow=new THREE.PointLight(0x88ccff,0,45);
+    oceanScreenGlow.position.set(OX,oceanScreenY,OZ+oceanScreenZ+2); g5.add(oceanScreenGlow);
+    // 場景專屬環境光（藍色系，壓制全局暖橘燈的影響）
+    const oceanAmb=new THREE.AmbientLight(0x0a1a40,2.0); g5.add(oceanAmb);
+    // 場景氛圍燈光（藍色系）
+    const ol1=new THREE.PointLight(0x2266cc,2.5,120); ol1.position.set(OX,6,OZ); g5.add(ol1);
+    const ol2=new THREE.PointLight(0x1144aa,2.0,80); ol2.position.set(OX-20,10,OZ-30); g5.add(ol2);
+    const ol3=new THREE.PointLight(0x1155bb,2.2,90); ol3.position.set(OX+20,10,OZ-30); g5.add(ol3);
+    const ol4=new THREE.PointLight(0x0a2255,1.5,60); ol4.position.set(OX,4,OZ+30); g5.add(ol4);
+    // 月光方向光（冷白藍）
+    const moonLight=new THREE.DirectionalLight(0xc8d8ff,0.8); moonLight.position.set(OX+30,60,OZ-80); g5.add(moonLight);
+
+    // ── 遠景島嶼剪影 ──────────────────────────────────
+    const islandDark=new THREE.MeshStandardMaterial({color:0x020108,roughness:1});
+    [[-55,2,-80],[-35,3.5,-90],[35,3,-88],[55,2,-78],[-80,1.5,-70],[80,1.5,-70]].forEach(([dx,h,dz])=>{
+      aG5(new THREE.SphereGeometry(h*4+6,10,6), islandDark, OX+dx,h*1.2-3,OZ+dz, 1,.35,1);
+    });
+
+    // ── 遠景星光反射條（藍白色） ──────────────────────
+    for(let r=0;r<8;r++){
+      const ox=(r-3.5)*5;
+      aG5(new THREE.PlaneGeometry(.5,60),
+        new THREE.MeshStandardMaterial({color:0x88bbff,emissive:0x4488cc,emissiveIntensity:1.5,transparent:true,opacity:.15}),
+        OX+ox,.02,OZ-30, 1,1,1, -Math.PI/2,0,0);
+    }
+    // 螢幕在海面的白藍反射
+    aG5(new THREE.PlaneGeometry(14,25),
+      new THREE.MeshStandardMaterial({color:0xaaccff,emissive:0x6699ee,emissiveIntensity:1.2,transparent:true,opacity:.18}),
+      OX,.01,OZ-10, 1,1,1, -Math.PI/2,0,0);
+
+    // 大月（背景）
+    aG5(new THREE.SphereGeometry(9,32,24),
+      new THREE.MeshStandardMaterial({color:0xf0eae0,emissive:0xeeddaa,emissiveIntensity:2.2}),
+      OX,40,OZ-120);
+    aG5(new THREE.SphereGeometry(12,18,12),
+      new THREE.MeshStandardMaterial({color:0xffeebb,emissive:0xddaa44,emissiveIntensity:.5,transparent:true,opacity:.12,side:THREE.BackSide}),
+      OX,40,OZ-120);
+
+    // 把這個場景用到的關鍵物件存起來供後續用
+    g5.userData.oceanScreenMesh=oceanScreenMesh;
+    g5.userData.oceanScreenGlow=oceanScreenGlow;
+    g5.userData.oceanSW=oceanSW;
+    g5.userData.oceanSH=oceanSH;
+    g5.userData.oceanScreenY=oceanScreenY;
+    g5.userData.oceanScreenZ=oceanScreenZ;
+    g5.userData.OX=OX;
+
+    g5.visible=false;
+  }
+
+  // ══════════════════════════════════════════════════
+  //  大螢幕（YouTube 播放牆）
+  //  位置：廣場正前方 (0, 5, -14)
+  //  做法：3D Mesh 框架 + CSS3DRenderer overlay
+  // ══════════════════════════════════════════════════
+
+  // 螢幕 3D 框架
+  const screenW=8, screenH=4.5, screenZ=-14;
+  const screenFrame=new THREE.Group();
+  screenFrame.position.set(0, 5.5, screenZ);
+  // 外框
+  const frameMat=new THREE.MeshStandardMaterial({color:0x111118,roughness:.3,metalness:.8});
+  addObj(new THREE.BoxGeometry(screenW+.4, screenH+.4, .22), frameMat, 0,5.5,screenZ);
+  // 霓虹框邊
+  const neonFrameMat=emMat(0xff6633,4);
+  [[screenW/2+.22,.0],[-(screenW/2+.22),.0]].forEach(([x])=>{
+    addObj(new THREE.BoxGeometry(.12,screenH+.4,.1),neonFrameMat, x,5.5,screenZ);
+  });
+  [[.0,screenH/2+.22],[.0,-(screenH/2+.22)]].forEach(([,y])=>{
+    addObj(new THREE.BoxGeometry(screenW+.6,.1,.1),neonFrameMat, 0,5.5+y,screenZ);
+  });
+  // 螢幕面板（暗色，用於無影片時）
+  const screenMesh=addObj(new THREE.BoxGeometry(screenW,screenH,.05),
+    new THREE.MeshStandardMaterial({color:0x0a0a14,emissive:0x111122,emissiveIntensity:1}),
+    0,5.5,screenZ-.1);
+  // 支柱
+  addObj(new THREE.CylinderGeometry(.18,.25,5.3,8),frameMat, 0,2.75,screenZ);
+  // 螢幕光暈
+  const screenGlow=new THREE.PointLight(0xff8844,0,25); screenGlow.position.set(0,5.5,screenZ+1); scene.add(screenGlow);
+
+  // CSS3D 實作 YouTube iframe（Overlay 方式）
+  // 用 HTML div 疊在 3D 螢幕位置上
+  const ytOverlay=document.createElement('div');
+  ytOverlay.id='ytOverlay';
+  ytOverlay.style.cssText='position:fixed;z-index:15;display:none;pointer-events:all;overflow:hidden;border-radius:0px;transform-origin:center center;transition:opacity 0.1s;';
+  document.body.appendChild(ytOverlay);
+  let ytIframe=null, ytVideoId='', screenNear=false;
+
+  // ── 海洋劇場獨立 YouTube overlay ────────────────────
+  const oceanYtOverlay=document.createElement('div');
+  oceanYtOverlay.id='oceanYtOverlay';
+  oceanYtOverlay.style.cssText='position:fixed;z-index:15;display:none;pointer-events:all;overflow:hidden;border-radius:0px;transform-origin:center center;transition:opacity 0.1s;';
+  document.body.appendChild(oceanYtOverlay);
+  let oceanYtIframe=null, oceanYtVideoId='', oceanScreenNear=false;
+  let oceanYtSrcIdx=0;
+  // 備用播放來源列表，依序嘗試
+  const YT_SOURCES=[
+    id=>`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`,
+    id=>`https://www.youtube.com/embed/${id}?autoplay=1&rel=0&playsinline=1`,
+    id=>`https://piped.video/embed/${id}?autoplay=1`,
+    id=>`https://invidious.nikkosphere.com/embed/${id}?autoplay=1`,
+    id=>`https://yewtu.be/embed/${id}?autoplay=1`,
+  ];
+  let ytSrcIdx=0;
+
+  function extractYtId(url){
+    const m=url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/);
+    return m?m[1]:null;
+  }
+
+  function tryNextSource(videoId){
+    if(ytSrcIdx>=YT_SOURCES.length){ showYtFallback(videoId); return; }
+    const src=YT_SOURCES[ytSrcIdx++](videoId);
+    if(ytIframe) ytIframe.src=src;
+  }
+
+  // 監聽 YouTube 錯誤訊息
+  window.addEventListener('message',e=>{
+    if(!ytVideoId) return;
+    try{
+      const d=typeof e.data==='string'?JSON.parse(e.data):e.data;
+      // YT playerError (info: 153 or 2/5/100/101/150)
+      if(d && d.event==='onError'){
+        console.log('[YT] error',d.info,'→ try next source');
+        tryNextSource(ytVideoId);
+      }
+    }catch(_){}
+  });
+
+  function playYt(videoId){
+    ytVideoId=videoId;
+    ytSrcIdx=0;
+    ytOverlay.innerHTML='';
+
+    // 縮圖底圖
+    const thumb=document.createElement('img');
+    thumb.src='https://img.youtube.com/vi/'+videoId+'/hqdefault.jpg';
+    thumb.style.cssText='width:100%;height:100%;object-fit:cover;display:block;position:absolute;top:0;left:0;';
+    ytOverlay.appendChild(thumb);
+
+    // iframe
+    ytIframe=document.createElement('iframe');
+    ytIframe.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;border:none;background:transparent;';
+    ytIframe.setAttribute('allow','autoplay; encrypted-media; picture-in-picture; fullscreen');
+    ytIframe.setAttribute('allowfullscreen','');
+    // 不加 sandbox，讓 YouTube 自己的 JS 能執行
+    ytIframe.src=YT_SOURCES[ytSrcIdx++](videoId);
+
+    // iframe 載入失敗時換下一個來源
+    ytIframe.addEventListener('load',()=>{
+      // 注入錯誤偵測：在 iframe load 後等一秒看有沒有 error
+      // （因為 153 是播放時才會出現，不是 HTTP 層錯誤）
+    });
+
+    // 設一個計時器：若3秒後縮圖還在最上層，嘗試下一個來源
+    let srcCheckCount=0;
+    const srcCheck=setInterval(()=>{
+      srcCheckCount++;
+      if(!ytIframe||!ytIframe.parentNode){ clearInterval(srcCheck); return; }
+      if(srcCheckCount>=3){
+        clearInterval(srcCheck);
+        // 嘗試下一個備用來源
+        if(ytSrcIdx<YT_SOURCES.length){
+          console.log('[YT] timeout, try source',ytSrcIdx);
+          ytIframe.src=YT_SOURCES[ytSrcIdx++](videoId);
+        } else {
+          showYtFallback(videoId);
+        }
+      }
+    },3000);
+
+    ytOverlay.appendChild(ytIframe);
+    ytOverlay.style.display='block';
+    screenMesh.material.emissiveIntensity=0;
+    screenGlow.intensity=3.5;
+    updateScreenOverlay();
+  }
+
+  function showYtFallback(videoId){
+    if(ytIframe && ytIframe.parentNode) ytIframe.parentNode.removeChild(ytIframe);
+    ytIframe=null;
+    // 移除舊的 fallback
+    ytOverlay.querySelectorAll('.yt-fallback').forEach(e=>e.remove());
+    const overlay2=document.createElement('div');
+    overlay2.className='yt-fallback';
+    overlay2.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.6);cursor:pointer;';
+    overlay2.innerHTML=`
+      <div style="width:54px;height:38px;background:#f00;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;">
+        <div style="border-left:18px solid #fff;border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:5px;"></div>
+      </div>
+      <div style="color:#fff;font-family:'Share Tech Mono',monospace;font-size:10px;text-align:center;letter-spacing:.08em;line-height:1.8;">影片無法嵌入<br>點擊開啟 YouTube</div>`;
+    overlay2.addEventListener('click',()=>{
+      window.open('https://www.youtube.com/watch?v='+videoId,'_blank');
+    });
+    overlay2.addEventListener('touchend',e=>{ e.preventDefault(); window.open('https://www.youtube.com/watch?v='+videoId,'_blank'); });
+    ytOverlay.appendChild(overlay2);
+  }
+
+  function stopYt(){
+    if(ytIframe){ ytOverlay.style.display='none'; }
+    screenMesh.material.emissiveIntensity=1;
+    screenGlow.intensity=0;
+  }
+
+  // 螢幕 overlay 位置同步：把3D螢幕四角投影到畫面座標，用CSS matrix3d貼合
+  function projectPoint(wx, wy, wz){
+    const v=new THREE.Vector3(wx,wy,wz);
+    v.project(camera);
+    return {
+      x:(v.x+1)*window.innerWidth/2,
+      y:(-v.y+1)*window.innerHeight/2,
+      behind: v.z>1
+    };
+  }
+
+  // 計算讓矩形(0,0,W,H)對齊四個目標點的CSS matrix3d
+  function computeMatrix3d(tl, tr, bl, br, W, H){
+    // 用一般的projective transform計算
+    // 參考：https://franklinta.com/2014/09/08/mapping-css-transforms/
+    function adj(m){ // 3x3 adjugate
+      return [
+        m[4]*m[8]-m[5]*m[7], m[2]*m[7]-m[1]*m[8], m[1]*m[5]-m[2]*m[4],
+        m[5]*m[6]-m[3]*m[8], m[0]*m[8]-m[2]*m[6], m[2]*m[3]-m[0]*m[5],
+        m[3]*m[7]-m[4]*m[6], m[1]*m[6]-m[0]*m[7], m[0]*m[4]-m[1]*m[3]
+      ];
+    }
+    function multmm(a,b){
+      const c=new Array(9).fill(0);
+      for(let i=0;i<3;i++) for(let j=0;j<3;j++) for(let k=0;k<3;k++) c[3*i+j]+=a[3*i+k]*b[3*k+j];
+      return c;
+    }
+    function multmv(m,v){ return [m[0]*v[0]+m[1]*v[1]+m[2]*v[2], m[3]*v[0]+m[4]*v[1]+m[5]*v[2], m[6]*v[0]+m[7]*v[1]+m[8]*v[2]]; }
+    function basisToPoints(p1,p2,p3,p4){
+      const m=[p1[0],p2[0],p3[0], p1[1],p2[1],p3[1], 1,1,1];
+      const v=multmv(adj(m),[p4[0],p4[1],1]);
+      return multmm(m,[v[0],0,0, 0,v[1],0, 0,0,v[2]]);
+    }
+    const src=basisToPoints([0,0],[W,0],[0,H],[W,H]);
+    const dst=basisToPoints([tl.x,tl.y],[tr.x,tr.y],[bl.x,bl.y],[br.x,br.y]);
+    const t=multmm(dst,adj(src));
+    // 正規化
+    for(let i=0;i<9;i++) t[i]/=t[8];
+    return [
+      t[0],t[3],0,t[6],
+      t[1],t[4],0,t[7],
+      0,   0,   1,0,
+      t[2],t[5],0,1
+    ];
+  }
+
+  const OW=480, OH=270; // iframe 原始尺寸
+
+  function updateScreenOverlay(){
+    const hw=screenW/2, hh=screenH/2;
+    const sz=screenZ;
+    const tl=projectPoint(-hw, 5.5+hh, sz);
+    const tr=projectPoint( hw, 5.5+hh, sz);
+    const bl=projectPoint(-hw, 5.5-hh, sz);
+    const br=projectPoint( hw, 5.5-hh, sz);
+
+    if(tl.behind||tr.behind||bl.behind||br.behind){
+      ytOverlay.style.opacity='0'; return;
+    }
+    ytOverlay.style.opacity='1';
+
+    // 設iframe固定大小，用matrix3d做透視扭曲貼合
+    ytOverlay.style.width=OW+'px';
+    ytOverlay.style.height=OH+'px';
+    ytOverlay.style.left='0px';
+    ytOverlay.style.top='0px';
+
+    const m=computeMatrix3d(tl,tr,bl,br,OW,OH);
+    ytOverlay.style.transform=`matrix3d(${m.join(',')})`;
+    ytOverlay.style.transformOrigin='0 0';
+  }
+
+  // YouTube 面板控制
+  document.getElementById('ytPlayBtn').addEventListener('click',()=>{
+    const url=document.getElementById('ytInput').value.trim();
+    const vid=extractYtId(url);
+    if(vid){ playYt(vid); document.getElementById('ytPanel').classList.remove('on'); }
+    else{ document.getElementById('ytInput').style.borderColor='rgba(255,80,80,.8)'; }
+  });
+  document.getElementById('ytCloseBtn').addEventListener('click',()=>{
+    document.getElementById('ytPanel').classList.remove('on');
+  });
+  document.getElementById('ytInput').addEventListener('input',()=>{
+    document.getElementById('ytInput').style.borderColor='rgba(255,150,60,.4)';
+  });
+  document.getElementById('ytInput').addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
+
+  // ── 海洋劇場 YouTube 播放函數 ─────────────────────
+  function playOceanYt(videoId){
+    oceanYtVideoId=videoId;
+    oceanYtSrcIdx=0;
+    oceanYtOverlay.innerHTML='';
+
+    const thumb=document.createElement('img');
+    thumb.src='https://img.youtube.com/vi/'+videoId+'/hqdefault.jpg';
+    thumb.style.cssText='width:100%;height:100%;object-fit:cover;display:block;position:absolute;top:0;left:0;';
+    oceanYtOverlay.appendChild(thumb);
+
+    oceanYtIframe=document.createElement('iframe');
+    oceanYtIframe.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;border:none;background:transparent;';
+    oceanYtIframe.setAttribute('allow','autoplay; encrypted-media; picture-in-picture; fullscreen');
+    oceanYtIframe.setAttribute('allowfullscreen','');
+    oceanYtIframe.src=YT_SOURCES[oceanYtSrcIdx++](videoId);
+
+    let srcCheckCount=0;
+    const srcCheck=setInterval(()=>{
+      srcCheckCount++;
+      if(!oceanYtIframe||!oceanYtIframe.parentNode){ clearInterval(srcCheck); return; }
+      if(srcCheckCount>=3){
+        clearInterval(srcCheck);
+        if(oceanYtSrcIdx<YT_SOURCES.length){
+          oceanYtIframe.src=YT_SOURCES[oceanYtSrcIdx++](videoId);
+        }
+      }
+    },3000);
+
+    oceanYtOverlay.appendChild(oceanYtIframe);
+    oceanYtOverlay.style.display='block';
+
+    const g5=sceneGroups[5];
+    if(g5 && g5.userData.oceanScreenMesh){
+      g5.userData.oceanScreenMesh.material.emissiveIntensity=0;
+      g5.userData.oceanScreenGlow.intensity=6.0;
+    }
+    updateOceanScreenOverlay();
+  }
+
+  function stopOceanYt(){
+    if(oceanYtIframe){ oceanYtOverlay.style.display='none'; }
+    const g5=sceneGroups[5];
+    if(g5 && g5.userData.oceanScreenMesh){
+      g5.userData.oceanScreenMesh.material.emissiveIntensity=1.2;
+      g5.userData.oceanScreenGlow.intensity=0;
+    }
+  }
+
+  // 海洋螢幕 overlay 位置同步
+  const OCEAN_OW=480, OCEAN_OH=270;
+  function updateOceanScreenOverlay(){
+    const g5=sceneGroups[5];
+    if(!g5) return;
+    const {oceanSW,oceanSH,oceanScreenY,oceanScreenZ,OX}=g5.userData;
+    const hw=oceanSW/2, hh=oceanSH/2;
+    const tl=projectPoint(OX-hw, oceanScreenY+hh, oceanScreenZ);
+    const tr=projectPoint(OX+hw, oceanScreenY+hh, oceanScreenZ);
+    const bl=projectPoint(OX-hw, oceanScreenY-hh, oceanScreenZ);
+    const br=projectPoint(OX+hw, oceanScreenY-hh, oceanScreenZ);
+
+    if(tl.behind||tr.behind||bl.behind||br.behind){
+      oceanYtOverlay.style.opacity='0'; return;
+    }
+    oceanYtOverlay.style.opacity='1';
+    oceanYtOverlay.style.width=OCEAN_OW+'px';
+    oceanYtOverlay.style.height=OCEAN_OH+'px';
+    oceanYtOverlay.style.left='0px';
+    oceanYtOverlay.style.top='0px';
+    const m=computeMatrix3d(tl,tr,bl,br,OCEAN_OW,OCEAN_OH);
+    oceanYtOverlay.style.transform=`matrix3d(${m.join(',')})`;
+    oceanYtOverlay.style.transformOrigin='0 0';
+  }
+
+  // 海洋劇場面板控制
+  document.getElementById('oceanPlayBtn').addEventListener('click',()=>{
+    const url=document.getElementById('oceanYtInput').value.trim();
+    const vid=extractYtId(url);
+    if(vid){ playOceanYt(vid); document.getElementById('oceanYtPanel').classList.remove('on'); }
+    else{ document.getElementById('oceanYtInput').style.borderColor='rgba(255,80,80,.8)'; }
+  });
+  document.getElementById('oceanCloseBtn').addEventListener('click',()=>{
+    document.getElementById('oceanYtPanel').classList.remove('on');
+  });
+  document.getElementById('oceanYtInput').addEventListener('input',()=>{
+    document.getElementById('oceanYtInput').style.borderColor='rgba(100,200,255,.4)';
+  });
+  document.getElementById('oceanYtInput').addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
+
+  // 螢幕靠近互動
+  window.addEventListener('click',e=>{
+    if(screenNear && e.clientX>window.innerWidth*.2 && e.clientX<window.innerWidth*.8
+       && e.clientY>window.innerHeight*.2 && e.clientY<window.innerHeight*.8){
+      if(!dOpen) document.getElementById('ytPanel').classList.toggle('on');
+    }
+  });
+  const screenHintEl=document.getElementById('screenHint');
+  const oceanScreenHintEl=document.getElementById('oceanScreenHint');
+
+  // 海洋劇場靠近互動
+  window.addEventListener('click',e=>{
+    if(currentScene===5){
+      const g5=sceneGroups[5];
+      if(g5 && oceanScreenNear && e.clientX>window.innerWidth*.15 && e.clientX<window.innerWidth*.85
+         && e.clientY>window.innerHeight*.1 && e.clientY<window.innerHeight*.85){
+        if(!dOpen) document.getElementById('oceanYtPanel').classList.toggle('on');
+      }
+    }
+  });
+
+  const MR=36;
+  const jk=document.getElementById('jk');
+  const joy={a:false,id:-1,cx:0,cy:0,dx:0,dy:0};
+  const look={yaw:Math.PI,pitch:.08,id:-1,lx:0,ly:0};
+  function isLeft(t){return t.clientX<window.innerWidth*.48;}
+  function setKnob(){jk.style.transform=`translate(calc(-50% + ${joy.dx*MR}px),calc(-50% + ${joy.dy*MR}px))`;}
+  function resetJoy(){joy.a=false;joy.id=-1;joy.dx=0;joy.dy=0;jk.style.transform='translate(-50%,-50%)';}
+  window.addEventListener('touchstart',e=>{
+    for(const t of e.changedTouches){
+      if(isLeft(t)&&!joy.a){
+        joy.a=true;joy.id=t.identifier;
+        const r=document.getElementById('jb').getBoundingClientRect();
+        joy.cx=r.left+r.width/2;joy.cy=r.top+r.height/2;
+      } else if(!isLeft(t)&&look.id===-1){look.id=t.identifier;look.lx=t.clientX;look.ly=t.clientY;}
+    }
+  },{passive:true});
+  window.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    for(const t of e.changedTouches){
+      if(t.identifier===joy.id&&joy.a){
+        const dx=t.clientX-joy.cx,dy=t.clientY-joy.cy,dist=Math.sqrt(dx*dx+dy*dy),ratio=Math.min(dist,MR)/MR,ang=Math.atan2(dy,dx);
+        joy.dx=Math.cos(ang)*ratio;joy.dy=Math.sin(ang)*ratio;setKnob();
+      }
+      if(t.identifier===look.id){
+        look.yaw-=(t.clientX-look.lx)*.0042; look.pitch-=(t.clientY-look.ly)*.003;
+        look.pitch=Math.max(-.5,Math.min(.6,look.pitch)); look.lx=t.clientX;look.ly=t.clientY;
+      }
+    }
+  },{passive:false});
+  function onEnd(e){for(const t of e.changedTouches){if(t.identifier===joy.id)resetJoy();if(t.identifier===look.id)look.id=-1;}}
+  window.addEventListener('touchend',onEnd,{passive:true});
+  window.addEventListener('touchcancel',onEnd,{passive:true});
+  let ml=false;
+  window.addEventListener('mousedown',e=>{if(e.clientX>window.innerWidth/2){ml=true;look.lx=e.clientX;look.ly=e.clientY;}});
+  window.addEventListener('mousemove',e=>{if(!ml||!e.buttons)return;look.yaw-=e.movementX*.003;look.pitch-=e.movementY*.003;look.pitch=Math.max(-.5,Math.min(.6,look.pitch));});
+  window.addEventListener('mouseup',()=>ml=false);
+  const keys={};
+  window.addEventListener('keydown',e=>{
+    keys[e.key]=true;
+    if(e.key===' '&&onGround){ velY=JUMP_V; onGround=false; }
+  });
+  window.addEventListener('keyup',e=>keys[e.key]=false);
+  window.addEventListener('click',e=>{
+    if(!dOpen&&nearChar&&e.clientX>window.innerWidth*.25&&e.clientX<window.innerWidth*.75&&e.clientY>window.innerHeight*.25&&e.clientY<window.innerHeight*.75) openDlg();
+  });
+
+  // ── 場景標籤 ─────────────────────────────────────
+  const ZONES=[{t:'— 大牌坊 —',x:0,z:9,r:6},{t:'— 大螢幕廣場 —',x:0,z:-14,r:8},{t:'— 月讀大街 —',x:0,z:-8,r:7},{t:'— 圓形劇場 —',x:-22,z:-8,r:7},{t:'— 神社本殿 —',x:16,z:-35,r:8},{t:'— 商店拱廊 —',x:0,z:-20,r:8},{t:'— 五重塔前 —',x:0,z:-20,r:6},{t:'— 佛塔廣場 —',x:-20,z:-50,r:8},{t:'— 彩葉身邊 —',x:0,z:3,r:5}];
+  let lastZ='',zT=0,nearChar=false;
+  const slEl=document.getElementById('sl'),hintEl=document.getElementById('hint');
+
+  // ── 傳送系統 ─────────────────────────────────────
+  const TP_DESTS=[
+    {name:'月讀夜街', x:0, y:2.2, z:6, yaw:Math.PI},      // 原始城市
+    {name:'浮世水庭', x:150, y:2.2, z:0, yaw:Math.PI},     // 水上庭院（往後看建物）
+    {name:'月社鳥居', x:0, y:2.2, z:-195, yaw:Math.PI},    // 神社（往神社方向看）
+    {name:'燈籠迴廊', x:-200, y:2.2, z:0, yaw:Math.PI/2},  // 燈籠廊道
+    {name:'緋柱迴廊', x:0, y:2.2, z:200, yaw:0},           // 朱紅柱廊
+    {name:'海洋劇場', x:300, y:2.2, z:0, yaw:Math.PI},     // 海洋劇場
+  ];
+  let currentScene=0;
+  const tpFlash=document.getElementById('tpFlash');
+  const tpBtn=document.getElementById('tpBtn');
+  const tpPanel=document.getElementById('tpPanel');
+
+  tpBtn.addEventListener('click', e=>{ e.stopPropagation(); tpPanel.classList.toggle('on'); });
+  tpBtn.addEventListener('touchend', e=>{ e.preventDefault(); e.stopPropagation(); tpPanel.classList.toggle('on'); });
+  tpBtn.addEventListener('touchstart', e=>e.stopPropagation(), {passive:false});
+  tpPanel.addEventListener('touchstart', e=>e.stopPropagation(), {passive:true});
+  tpPanel.addEventListener('click', e=>e.stopPropagation());
+
+  document.querySelectorAll('.tpDest').forEach(el=>{
+    const handler=()=>{
+      const idx=parseInt(el.dataset.idx);
+      if(idx===currentScene){ tpPanel.classList.remove('on'); return; }
+      // 閃白傳送動畫
+      tpFlash.classList.add('flash');
+      setTimeout(()=>{
+        const dest=TP_DESTS[idx];
+        camera.position.set(dest.x, dest.y, dest.z);
+        look.yaw=dest.yaw; look.pitch=0.08;
+        velY=0; onGround=true;
+        // ── 場景可見性切換（視野外的場景隱藏以提高效能）──
+        // 主城(0)永遠可見；其他場景只有 active 時才顯示
+        sceneGroups.forEach((g,i)=>{ if(g) g.visible=(i===idx); });
+        currentScene=idx;
+        // 傳送時隱藏主場景螢幕 overlay（若不在場景0就隱藏）
+        if(idx!==0 && ytIframe){ ytOverlay.style.display='none'; }
+        // 傳送時隱藏海洋劇場螢幕 overlay（若不在場景5就隱藏）
+        if(idx!==5 && oceanYtIframe){ oceanYtOverlay.style.display='none'; }
+        // 傳送回場景5時恢復顯示
+        if(idx===5 && oceanYtIframe && oceanYtVideoId){ oceanYtOverlay.style.display='block'; updateOceanScreenOverlay(); }
+        // 傳回主場景時恢復
+        if(idx===0 && ytIframe && ytVideoId){ ytOverlay.style.display='block'; }
+        // 更新 active 狀態
+        document.querySelectorAll('.tpDest').forEach(d=>d.classList.remove('active'));
+        el.classList.add('active');
+        // 更新 HUD 場景名
+        const slEl2=document.getElementById('sl');
+        slEl2.textContent='— '+dest.name+' —';
+        slEl2.classList.add('on');
+        setTimeout(()=>slEl2.classList.remove('on'), 2500);
+        tpPanel.classList.remove('on');
+        tpFlash.classList.remove('flash');
+      }, 220);
+    };
+    el.addEventListener('click', handler);
+    el.addEventListener('touchend', e=>{ e.preventDefault(); handler(); }, {passive:false});
+  });
+
+  // 點擊其他地方關閉傳送面板
+  document.addEventListener('click', ()=>tpPanel.classList.remove('on'));
+
+  // ── 天氣系統 ─────────────────────────────────────
+  // 每種天氣有對應的霧色/環境光/方向
+  const WX_CONFIGS=[
+    // 0:月讀夜空
+    {fog:0x0d0510,fogD:.015,amb:0x18080e,ambI:1.2,moonCol:0xffe8b0,moonI:.65,warmI:1.6,coolI:.8,name:'月讀夜空'},
+    // 1:銀河
+    {fog:0x020008,fogD:.01,amb:0x050210,ambI:1.0,moonCol:0xccaaff,moonI:.5,warmI:.8,coolI:1.2,name:'銀河星雲'},
+    // 2:彩虹魚
+    {fog:0x080418,fogD:.012,amb:0x0c0818,ambI:1.1,moonCol:0xffaadd,moonI:.55,warmI:1.2,coolI:1.0,name:'彩虹魚飛天'},
+    // 3:極光
+    {fog:0x010808,fogD:.01,amb:0x021210,ambI:.9,moonCol:0x88ffcc,moonI:.6,warmI:.6,coolI:1.5,name:'極光之夜'},
+    // 4:海底
+    {fog:0x020a18,fogD:.025,amb:0x050e18,ambI:1.3,moonCol:0x44ccff,moonI:.4,warmI:.5,coolI:1.8,name:'海底世界'},
+    // 5:粉夢
+    {fog:0x180818,fogD:.013,amb:0x180810,ambI:1.2,moonCol:0xffccee,moonI:.5,warmI:1.0,coolI:.9,name:'粉夢雲海'},
+    // 6:血月
+    {fog:0x140204,fogD:.018,amb:0x1a0402,ambI:1.4,moonCol:0xff4400,moonI:.8,warmI:2.0,coolI:.4,name:'血月暴風雨'},
+  ];
+  let currentWx=0;
+  const wxBtn=document.getElementById('wxBtn');
+  const wxPanel=document.getElementById('wxPanel');
+  const wxFlash=document.getElementById('wxFlash');
+
+  wxBtn.addEventListener('click',e=>{e.stopPropagation();wxPanel.classList.toggle('on');});
+  wxBtn.addEventListener('touchend',e=>{e.preventDefault();e.stopPropagation();wxPanel.classList.toggle('on');});
+  wxBtn.addEventListener('touchstart',e=>e.stopPropagation(),{passive:false});
+  wxPanel.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
+  wxPanel.addEventListener('click',e=>e.stopPropagation());
+
+  function applyWeather(idx){
+    const cfg=WX_CONFIGS[idx];
+    skyMat.uniforms.uMode.value=idx;
+    scene.fog.color.setHex(cfg.fog);
+    scene.fog.density=cfg.fogD;
+    ambLight.color.setHex(cfg.amb);
+    ambLight.intensity=cfg.ambI;
+    moon.color.setHex(cfg.moonCol);
+    moon.intensity=cfg.moonI;
+    mainWarm.intensity=cfg.warmI;
+    coolFill.intensity=cfg.coolI;
+    currentWx=idx;
+  }
+
+  document.querySelectorAll('.wxItem').forEach(el=>{
+    const handler=()=>{
+      const idx=parseInt(el.dataset.wx);
+      wxFlash.classList.add('flash');
+      setTimeout(()=>{
+        applyWeather(idx);
+        document.querySelectorAll('.wxItem').forEach(d=>d.classList.remove('active'));
+        el.classList.add('active');
+        wxPanel.classList.remove('on');
+        wxFlash.classList.remove('flash');
+      }, 320);
+    };
+    el.addEventListener('click',handler);
+    el.addEventListener('touchend',e=>{e.preventDefault();handler();},{passive:false});
+  });
+  document.addEventListener('click',()=>wxPanel.classList.remove('on'));
+
+  // ── 主循環 ───────────────────────────────────────
+  const SPEED=.1, fwd=new THREE.Vector3(), rgt=new THREE.Vector3();
+  const GRAVITY=-18, CAM_H=2.2, JUMP_V=7.5;
+  let velY=0, onGround=true;
+  function animate(now){
+    requestAnimationFrame(animate);
+    const dt=Math.min((now-lastNow)/1000,.05); lastNow=now; T+=dt;
+    if(T<.1){ const ldEl=document.getElementById('ld'); if(ldEl) ldEl.style.display='none'; }
+    if(T<.2){ document.getElementById('ld').style.display='none'; }
+    skyMat.uniforms.uT.value=T;
+    // 動態水面每幀更新時間
+    waterMats.forEach(m=>{ m.uniforms.uT.value=T; });
+    updateFW(dt);
+
+    // 移動
+    let mx=joy.dx, mz=joy.dy;
+    if(keys['w']||keys['ArrowUp'])   mz=-1;
+    if(keys['s']||keys['ArrowDown']) mz= 1;
+    if(keys['a']||keys['ArrowLeft']) mx=-1;
+    if(keys['d']||keys['ArrowRight'])mx= 1;
+    const spd=SPEED*Math.min(dt*60,2);
+    fwd.set(-Math.sin(look.yaw),0,-Math.cos(look.yaw));
+    rgt.set( Math.cos(look.yaw),0,-Math.sin(look.yaw));
+    camera.position.addScaledVector(fwd,-mz*spd);
+    camera.position.addScaledVector(rgt, mx*spd);
+    // 跳躍物理
+    velY += GRAVITY * dt;
+    camera.position.y += velY * dt;
+    if(camera.position.y <= CAM_H){ camera.position.y=CAM_H; velY=0; onGround=true; }
+    else { onGround=false; }
+    camera.rotation.order='YXZ'; camera.rotation.y=look.yaw; camera.rotation.x=look.pitch;
+
+    // 標籤
+    const px=camera.position.x,pz=camera.position.z;
+    for(const z of ZONES){
+      if(Math.sqrt((px-z.x)**2+(pz-z.z)**2)<z.r&&z.t!==lastZ){lastZ=z.t;slEl.textContent=z.t;slEl.classList.add('on');zT=2.5;}
+    }
+    if(zT>0){zT-=dt;if(zT<=0)slEl.classList.remove('on');}
+
+    // 彩葉互動
+    nearChar=Math.sqrt(px*px+(pz-3)**2)<4.5;
+    hintEl.style.display=nearChar&&!dOpen?'block':'none';
+
+    // 彩葉面向玩家
+    charG.lookAt(camera.position.x,0,camera.position.z);
+    charG.position.y=Math.sin(T*.7)*.07;
+
+    // 塔環旋轉（更新 instanceMatrix）
+    ringColors.forEach((c,i)=>{
+      dummy.position.set(0,ringBaseY-i*.32,-20);
+      dummy.rotation.set(Math.PI/2, T*(.5+i*.18), 0);
+      dummy.scale.set(1+i*.28,1+i*.28,1); dummy.updateMatrix();
+      ringInst.setMatrixAt(i,dummy.matrix);
+    });
+    ringInst.instanceMatrix.needsUpdate=true;
+
+    // 燈柱環旋轉
+    lampRingMetas.forEach(({x,z,y,ri,pi,idx})=>{
+      dummy.position.set(x,y,z);
+      dummy.rotation.set(Math.PI/2, T*(.55+ri*.22)+pi, 0);
+      dummy.scale.set(1+ri*.3,1+ri*.3,1); dummy.updateMatrix();
+      lampRingInst.setMatrixAt(idx,dummy.matrix);
+    });
+    lampRingInst.instanceMatrix.needsUpdate=true;
+
+    // 霓虹線閃爍（shader uniform 更省，這裡改opacity）
+    wireObj.material.opacity=.5+.35*Math.sin(T*2.5);
+
+    // 魚飛翔動畫 + 視野距離剔除
+    let fishDirty=false;
+    FISH.forEach(([x,y,z,col],i)=>{
+      const spd2=0.18+i*0.015;
+      const nx=x + Math.sin(T*spd2+i*2.1)*3.5;
+      const ny=y + Math.sin(T*(spd2*.7)+i*1.3)*1.8;
+      const nz=z + Math.cos(T*spd2*0.6+i*0.8)*2.5;
+      // 視野距離剔除：超過 75 單位縮成 0 不渲染
+      const dx2=nx-camera.position.x, dz2=nz-camera.position.z;
+      const dist2=dx2*dx2+dz2*dz2;
+      if(dist2>75*75){
+        dummy.scale.set(0,0,0); dummy.updateMatrix();
+        fishInst.setMatrixAt(i,dummy.matrix); fishDirty=true; return;
+      }
+      const yaw=Math.atan2(
+        Math.cos(T*spd2+i*2.1)*spd2,
+        -Math.sin(T*spd2*0.6+i*0.8)*spd2*0.6
+      );
+      const tilt=Math.sin(T*(spd2*.7)+i*1.3)*0.22;
+      dummy.position.set(nx,ny,nz);
+      dummy.rotation.set(tilt, yaw, Math.sin(T*spd2*1.2+i)*.1);
+      dummy.scale.set(2.2+Math.sin(T*spd2*2+i)*.12, .82, 1);
+      dummy.updateMatrix();
+      fishInst.setMatrixAt(i,dummy.matrix); fishDirty=true;
+    });
+    if(fishDirty) fishInst.instanceMatrix.needsUpdate=true;
+
+    document.getElementById('hi').textContent=`(${px.toFixed(0)}, ${(-pz).toFixed(0)})`;
+
+    // 風車旋轉
+    windmillBlades.forEach(b=>{ b.rotation.z=T*.8; });
+
+    // ── 錦鯉動畫（浮世水庭）──────────────────────────
+    const koiInst2=scene.userData.koiInst, koiData2=scene.userData.koiData;
+    if(koiInst2 && sceneGroups[1] && sceneGroups[1].visible){
+      koiData2.forEach((k,i)=>{
+        const nx=k.ox+Math.sin(T*k.spd+k.phase)*8;
+        const nz=k.oz+Math.cos(T*k.spd*.7+k.phase*1.3)*8;
+        dummy.position.set(nx,.18+Math.sin(T*k.spd*1.4+k.phase)*.06,nz);
+        dummy.rotation.set(0, Math.atan2(Math.cos(T*k.spd+k.phase)*k.spd, -Math.sin(T*k.spd*.7+k.phase)*k.spd*.7), 0);
+        dummy.scale.set(2.2+Math.sin(T*k.spd*2+k.phase)*.15,.5,1);
+        dummy.updateMatrix(); koiInst2.setMatrixAt(i,dummy.matrix);
+      });
+      koiInst2.instanceMatrix.needsUpdate=true;
+    }
+
+    // 螢幕光暈呼吸
+    if(ytIframe && ytOverlay.style.display!=='none'){
+      screenGlow.intensity=3.0+Math.sin(T*2)*.5;
+    }
+    // 每幀都更新螢幕overlay位置
+    if(ytIframe && ytOverlay.style.display!=='none'){
+      updateScreenOverlay();
+    }
+
+    // 海洋劇場螢幕光暈呼吸
+    if(currentScene===5){
+      const g5=sceneGroups[5];
+      if(g5){
+        // 更新天空 uniform
+        if(g5.userData.oceanSkyMat) g5.userData.oceanSkyMat.uniforms.uT.value=T;
+        if(oceanYtIframe && oceanYtOverlay.style.display!=='none'){
+          g5.userData.oceanScreenGlow.intensity=5.5+Math.sin(T*1.8)*.8;
+          updateOceanScreenOverlay();
+        }
+      }
+    }
+
+    // 螢幕靠近偵測（主場景）
+    const sdx=px, sdz=pz-screenZ;
+    screenNear=Math.sqrt(sdx*sdx+sdz*sdz)<8;
+    screenHintEl.style.display=screenNear&&!dOpen&&document.getElementById('ytPanel').classList.contains('on')===false&&currentScene===0?'block':'none';
+
+    // 海洋劇場螢幕靠近偵測
+    if(currentScene===5){
+      const g5=sceneGroups[5];
+      if(g5){
+        const osX=g5.userData.OX, osZ=g5.userData.oceanScreenZ;
+        const odx=px-osX, odz=pz-osZ;
+        oceanScreenNear=Math.sqrt(odx*odx+odz*odz)<15;
+        oceanScreenHintEl.style.display=oceanScreenNear&&!dOpen&&document.getElementById('oceanYtPanel').classList.contains('on')===false?'block':'none';
+      }
+    } else {
+      oceanScreenNear=false;
+      oceanScreenHintEl.style.display='none';
+    }
+
+    renderer.render(scene,camera);
+  }
+  requestAnimationFrame(animate);
+
+  window.addEventListener('resize',()=>{
+    camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+  });
+  } catch(e) {
+    const ld=document.getElementById('ld');
+    ld.style.display='flex';
+    ld.style.opacity='1'; ld.classList.remove('out');
+    ld.innerHTML='<div style="color:#ff88cc;font-family:monospace;font-size:11px;padding:20px;text-align:center;line-height:1.8">ERROR:<br>'+e.message+'<br><br>'+(e.stack||'').split('\n').slice(0,4).join('<br>')+'</div>';
+  }
+}
+</script>
+</body>
+</html>
